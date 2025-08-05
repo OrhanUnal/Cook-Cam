@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_home" android:icon="@drawable/ic_home" android:title="Ana Sayfa" />
+    <item android:id="@+id/nav_camera" android:icon="@drawable/ic_camera" android:title="Kamera" />
+    <item android:id="@+id/nav_calendar" android:icon="@drawable/ic_calendar" android:title="Takvim" />
+    <item android:id="@+id/nav_saved" android:icon="@drawable/ic_saved" android:title="Kaydedilenler" />
+    <item android:id="@+id/nav_ai_chat" android:icon="@drawable/ic_chat" android:title="AI Chat" />
+</menu>
