@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:background="#FAFAFA">
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
@@ -12,6 +13,7 @@
         android:padding="8dp"
         android:overScrollMode="never" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +21,7 @@
         android:padding="8dp"
         android:background="#FFFFFF"
         android:elevation="4dp">
+
 
         <EditText
             android:id="@+id/userInput"
@@ -31,6 +34,17 @@
             android:textSize="16sp"
             android:inputType="textCapSentences|textMultiLine"
             android:imeOptions="actionSend" />
+
+
+        <ImageButton
+            android:id="@+id/btnVoice"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Sesli Mesaj"
+            android:layout_marginStart="8dp" />
+
 
         <Button
             android:id="@+id/sendButton"
