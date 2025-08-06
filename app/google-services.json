@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640615344655",
+    "project_id": "yemek-tarif-uygulamasi-91f7d",
+    "storage_bucket": "yemek-tarif-uygulamasi-91f7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640615344655:android:5a75466164e2ebd344517a",
+        "android_client_info": {
+          "package_name": "com.kivinecostone.yemek_tarif_uygulamasi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5TrxoQlse269SFYEsRfwfzrI7xJcyPKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
