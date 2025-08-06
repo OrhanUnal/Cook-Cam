@@ -1,38 +1,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FAFAFA">
 
-    <ScrollView
-        android:id="@+id/chatScroll"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp">
-
-        <TextView
-            android:id="@+id/chatHistory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp" />
-    </ScrollView>
+        android:padding="8dp"
+        android:overScrollMode="never" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp">
 
         <EditText
             android:id="@+id/userInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Yemek ile ilgili sorunuzu yazın" />
+            android:hint="Mesajınızı yazın..."
+            android:padding="12dp"
+            android:background="@drawable/bg_input"
+            android:textSize="16sp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:imeOptions="actionSend" />
 
         <Button
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gönder" />
+            android:text="Gönder"
+            android:backgroundTint="#6C63FF"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>
