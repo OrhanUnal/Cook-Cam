@@ -7,7 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ChatAdapter(private val messages: List<ChatMessage>) :
+class ChatAdapter(private val messages: MutableList<ChatMessage>) :
+
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val viewTypeUser = 0

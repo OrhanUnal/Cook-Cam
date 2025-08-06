@@ -1,33 +1,43 @@
 package com.kivinecostone.yemek_tarif_uygulamasi
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
 
 class AiChatFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var userInput: EditText
     private lateinit var sendButton: Button
+    private lateinit var btnVoice: ImageButton
     private val messages = mutableListOf<ChatMessage>()
     private lateinit var adapter: ChatAdapter
 
-    private val OPENAI_API_KEY = "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"
+    private val OPENAI_API_KEY = "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"
+    private val SPEECH_REQUEST_CODE = 100
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +48,7 @@ class AiChatFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewChat)
         userInput = view.findViewById(R.id.userInput)
         sendButton = view.findViewById(R.id.sendButton)
+        btnVoice = view.findViewById(R.id.btnVoice)
 
         adapter = ChatAdapter(messages)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -53,7 +64,32 @@ class AiChatFragment : Fragment() {
             }
         }
 
+        btnVoice.setOnClickListener {
+            startSpeechToText()
+        }
+
         return view
+    }
+
+    private fun startSpeechToText() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "tr-TR")
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Konuşabilirsiniz...")
+        try {
+            startActivityForResult(intent, SPEECH_REQUEST_CODE)
+        } catch (e: ActivityNotFoundException) {
+            userInput.setText("Cihazınızda sesli giriş desteklenmiyor.")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val spokenText = result?.get(0) ?: ""
+            userInput.setText(spokenText)
+        }
     }
 
     private fun addMessage(msg: ChatMessage) {
@@ -63,10 +99,11 @@ class AiChatFragment : Fragment() {
     }
 
     private fun showTypingIndicator() {
-        messages.add(ChatMessage("", isTyping = true))
+        messages.add(ChatMessage(message = "", isUser = false, isTyping = true))
         adapter.notifyItemInserted(messages.size - 1)
         recyclerView.scrollToPosition(messages.size - 1)
     }
+
 
     private fun removeTypingIndicator() {
         val index = messages.indexOfFirst { it.isTyping }
@@ -76,22 +113,33 @@ class AiChatFragment : Fragment() {
         }
     }
 
+    private fun typeWriterEffect(fullText: String, index: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val builder = StringBuilder()
+            for (char in fullText) {
+                builder.append(char)
+                messages[index].message = builder.toString()
+                adapter.notifyItemChanged(index)
+                delay(5)
+            }
+        }
+    }
+
     private fun getAiResponse(userQuestion: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val client = OkHttpClient()
 
                 val prompt = """
-Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.
-Eğer soru yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet programları, protein, vitamin veya sağlıklı yaşam ile ilgiliyse mutlaka cevap ver.
-Konu doğrudan yemek tarifleri olmasa bile, yemekle veya beslenmeyle dolaylı olarak ilgiliyse cevap vermeye çalış.
-Sadece tamamen yemek, beslenme veya mutfak ile ilgisi olmayan soruları reddet.
-
-Kullanıcı sorusu: $userQuestion
-""".trimIndent()
+                Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.
+                Eğer kullanıcı mesajı yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet, protein, vitamin veya sağlıklı yaşam ile ilgiliyse net bir şekilde cevap ver.
+                Eğer konu tamamen yemekle ilgisizse kibarca "Bu konuda yardımcı olamıyorum." de.
+                
+                Kullanıcı mesajı: $userQuestion
+                """.trimIndent()
 
                 val messagesArray = JSONArray()
-                messagesArray.put(JSONObject().put("role", "system").put("content", "Sen sadece yemek konularında konuşan bir asistansın."))
+                messagesArray.put(JSONObject().put("role", "system").put("content", "Sen sadece yemek, beslenme ve mutfak konularında konuşan bir asistansın."))
                 messagesArray.put(JSONObject().put("role", "user").put("content", prompt))
 
                 val json = JSONObject()
@@ -99,10 +147,7 @@ Kullanıcı sorusu: $userQuestion
                 json.put("messages", messagesArray)
                 json.put("max_tokens", 500)
 
-                val requestBody = RequestBody.create(
-                    "application/json".toMediaType(),
-                    json.toString()
-                )
+                val requestBody = json.toString().toRequestBody("application/json".toMediaType())
 
                 val request = Request.Builder()
                     .url("https://api.openai.com/v1/chat/completions")
@@ -123,12 +168,22 @@ Kullanıcı sorusu: $userQuestion
                         activity?.runOnUiThread {
                             removeTypingIndicator()
                             if (response.isSuccessful && body != null) {
-                                val content = JSONObject(body)
-                                    .getJSONArray("choices")
-                                    .getJSONObject(0)
-                                    .getJSONObject("message")
-                                    .getString("content")
-                                addMessage(ChatMessage(content.trim(), isUser = false))
+                                try {
+                                    val content = JSONObject(body)
+                                        .getJSONArray("choices")
+                                        .getJSONObject(0)
+                                        .getJSONObject("message")
+                                        .getString("content")
+
+                                    messages.add(ChatMessage("", isUser = false))
+                                    val botIndex = messages.size - 1
+                                    adapter.notifyItemInserted(botIndex)
+                                    typeWriterEffect(content.trim(), botIndex)
+
+
+                                } catch (e: Exception) {
+                                    addMessage(ChatMessage("Yanıt çözümlenemedi: ${e.message}", isUser = false))
+                                }
                             } else {
                                 addMessage(ChatMessage("Hata: ${response.message}", isUser = false))
                             }
