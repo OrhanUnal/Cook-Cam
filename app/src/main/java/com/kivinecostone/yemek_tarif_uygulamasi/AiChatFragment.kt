@@ -6,22 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ScrollView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.*
-import org.json.JSONObject
-import java.io.IOException
 import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONArray
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.kivinecostone.yemek_tarif_uygulamasi.ChatAdapter
-import com.kivinecostone.yemek_tarif_uygulamasi.ChatMessage
-
+import org.json.JSONObject
+import java.io.IOException
 
 class AiChatFragment : Fragment() {
 
@@ -50,8 +45,9 @@ class AiChatFragment : Fragment() {
         sendButton.setOnClickListener {
             val text = userInput.text.toString().trim()
             if (text.isNotEmpty()) {
-                addMessage(ChatMessage(text, true))
+                addMessage(ChatMessage(text, isUser = true))
                 userInput.setText("")
+                showTypingIndicator()
                 getAiResponse(text)
             }
         }
@@ -63,6 +59,20 @@ class AiChatFragment : Fragment() {
         messages.add(msg)
         adapter.notifyItemInserted(messages.size - 1)
         recyclerView.scrollToPosition(messages.size - 1)
+    }
+
+    private fun showTypingIndicator() {
+        messages.add(ChatMessage("", isTyping = true))
+        adapter.notifyItemInserted(messages.size - 1)
+        recyclerView.scrollToPosition(messages.size - 1)
+    }
+
+    private fun removeTypingIndicator() {
+        val index = messages.indexOfFirst { it.isTyping }
+        if (index != -1) {
+            messages.removeAt(index)
+            adapter.notifyItemRemoved(index)
+        }
     }
 
     private fun getAiResponse(userQuestion: String) {
@@ -78,7 +88,6 @@ Sadece tamamen yemek, beslenme veya mutfak ile ilgisi olmayan soruları reddet.
 
 Kullanıcı sorusu: $userQuestion
 """.trimIndent()
-
 
                 val messagesArray = JSONArray()
                 messagesArray.put(JSONObject().put("role", "system").put("content", "Sen sadece yemek konularında konuşan bir asistansın."))
@@ -103,32 +112,32 @@ Kullanıcı sorusu: $userQuestion
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         activity?.runOnUiThread {
-                            addMessage(ChatMessage("Hata: ${e.message}", false))
+                            removeTypingIndicator()
+                            addMessage(ChatMessage("Hata: ${e.message}", isUser = false))
                         }
                     }
 
                     override fun onResponse(call: Call, response: Response) {
                         val body = response.body?.string()
-                        if (response.isSuccessful && body != null) {
-                            val content = JSONObject(body)
-                                .getJSONArray("choices")
-                                .getJSONObject(0)
-                                .getJSONObject("message")
-                                .getString("content")
-
-                            activity?.runOnUiThread {
-                                addMessage(ChatMessage(content.trim(), false))
-                            }
-                        } else {
-                            activity?.runOnUiThread {
-                                addMessage(ChatMessage("Hata: ${response.message}", false))
+                        activity?.runOnUiThread {
+                            removeTypingIndicator()
+                            if (response.isSuccessful && body != null) {
+                                val content = JSONObject(body)
+                                    .getJSONArray("choices")
+                                    .getJSONObject(0)
+                                    .getJSONObject("message")
+                                    .getString("content")
+                                addMessage(ChatMessage(content.trim(), isUser = false))
+                            } else {
+                                addMessage(ChatMessage("Hata: ${response.message}", isUser = false))
                             }
                         }
                     }
                 })
             } catch (e: Exception) {
                 activity?.runOnUiThread {
-                    addMessage(ChatMessage("Hata: ${e.message}", false))
+                    removeTypingIndicator()
+                    addMessage(ChatMessage("Hata: ${e.message}", isUser = false))
                 }
             }
         }

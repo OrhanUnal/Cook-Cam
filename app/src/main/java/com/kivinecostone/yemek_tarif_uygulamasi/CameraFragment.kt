@@ -7,39 +7,52 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 class CameraFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_camera, container, false)
-    }
 
-    companion object{
+    private val CAMERA_AI_API = "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"
+    private lateinit var ivImage: ImageView
+    private lateinit var tvResult: TextView
+
+    companion object {
         private const val CAMERA_PERMISSION_CODE = 1
         private const val CAMERA_REQUEST_CODE = 2
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_camera, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val btn_camera = view.findViewById<Button>(R.id.btn_camera)
-        btn_camera.setOnClickListener{
-            if (ContextCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.CAMERA
-                )== PackageManager.PERMISSION_GRANTED
-            ){
+
+        ivImage = view.findViewById(R.id.iv_image)
+        tvResult = view.findViewById(R.id.tv_result)
+        val btnCamera = view.findViewById<Button>(R.id.btn_camera)
+
+        btnCamera.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            }
-            else{
+            } else {
                 ActivityCompat.requestPermissions(
                     requireActivity(),
                     arrayOf(Manifest.permission.CAMERA),
@@ -49,39 +62,100 @@ class CameraFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == CAMERA_PERMISSION_CODE){
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            }else{
-                Toast.makeText(
-                    requireContext(),
-                    "Oops, you just denied the permission for camera. "+
-                            "Please allow it in the settings.",
-                    Toast.LENGTH_LONG
-                ).show()
+            } else {
+                tvResult.text = "Kamera izni reddedildi."
             }
         }
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == CAMERA_REQUEST_CODE){
-                val thumBnail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                val iv_image = view?.findViewById<ImageView>(R.id.iv_image)
-                iv_image?.setImageBitmap(thumBnail)
-            }
+        if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
+            val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
+            ivImage.setImageBitmap(thumbnail)
+
+            // Fotoğrafı Base64'e çevir
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+            val imageBytes = byteArrayOutputStream.toByteArray()
+            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+
+            // AI'ye gönder
+            sendImageToGPT(base64Image)
         }
+    }
+
+    private fun sendImageToGPT(base64Image: String) {
+        val client = OkHttpClient()
+        val mediaType = "application/json".toMediaType()
+
+        val body = """
+{
+  "model": "gpt-4.1-mini",
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text", 
+          "text": "Görseli analiz et. Eğer görselde yemek varsa, bu yemeğin yaklaşık kalorisini tahmin et ve ''Tahmini Kalori:'' 'kcal' birimi ile yaz. Eğer görselde yemek yoksa, 'Bu fotoğrafta yemek görünmüyor.' de."
+        },
+        {
+          "type": "image_url", 
+          "image_url": {"url": "data:image/jpeg;base64,$base64Image"}
+        }
+      ]
+    }
+  ]
+}
+""".trimIndent()
+
+
+        val request = Request.Builder()
+            .url("https://api.openai.com/v1/chat/completions")
+            .post(body.toRequestBody(mediaType))
+            .addHeader("Authorization", "Bearer $CAMERA_AI_API")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    tvResult.text = "API isteği başarısız oldu: ${e.message}"
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                if (!response.isSuccessful || responseBody.isNullOrEmpty()) {
+                    requireActivity().runOnUiThread {
+                        tvResult.text = "Geçersiz yanıt alındı."
+                    }
+                    return
+                }
+
+                try {
+                    val jsonResponse = JSONObject(responseBody)
+                    val botMessage = jsonResponse
+                        .getJSONArray("choices")
+                        .getJSONObject(0)
+                        .getJSONObject("message")
+                        .getString("content")
+
+                    requireActivity().runOnUiThread {
+                        tvResult.text = "$botMessage"
+                    }
+                } catch (e: Exception) {
+                    requireActivity().runOnUiThread {
+                        tvResult.text = "Yanıt çözümlenemedi: ${e.message}"
+                    }
+                }
+            }
+        })
     }
 }

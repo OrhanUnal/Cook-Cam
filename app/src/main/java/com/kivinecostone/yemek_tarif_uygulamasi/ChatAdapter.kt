@@ -3,33 +3,63 @@ package com.kivinecostone.yemek_tarif_uygulamasi
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ChatAdapter(private val messages: List<ChatMessage>) :
-    RecyclerView.Adapter<ChatAdapter.MessageViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val viewTypeUser = 0
+    private val viewTypeBot = 1
+    private val viewTypeTyping = 2
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val messageText: TextView = itemView.findViewById(R.id.messageText)
+        val avatarImage: ImageView = itemView.findViewById(R.id.avatarImage)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val layout = if (viewType == 0) {
-            R.layout.item_message_user
-        } else {
-            R.layout.item_message_bot
-        }
-        return MessageViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false))
-    }
-
-    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        holder.messageText.text = messages[position].message
-    }
+    inner class TypingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun getItemViewType(position: Int): Int {
-        return if (messages[position].isUser) 0 else 1
+        return when {
+            messages[position].isTyping -> viewTypeTyping
+            messages[position].isUser -> viewTypeUser
+            else -> viewTypeBot
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            viewTypeUser -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_message_user, parent, false)
+                MessageViewHolder(view)
+            }
+            viewTypeBot -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_message_bot, parent, false)
+                MessageViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_message_typing, parent, false)
+                TypingViewHolder(view)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val message = messages[position]
+        if (holder is MessageViewHolder) {
+            holder.messageText.text = message.message
+            if (message.isUser) {
+                holder.avatarImage.setImageResource(R.drawable.ic_user)
+            } else {
+                holder.avatarImage.setImageResource(R.drawable.ic_bot_chef)
+            }
+        }
     }
 
     override fun getItemCount(): Int = messages.size
 }
-
