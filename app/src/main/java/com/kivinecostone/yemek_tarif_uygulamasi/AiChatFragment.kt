@@ -71,11 +71,14 @@ class AiChatFragment : Fragment() {
                 val client = OkHttpClient()
 
                 val prompt = """
-                    Sen sadece yemek tarifleri, yemek pişirme teknikleri , kalori , gram , protein , karbonhidrat , yağ sporcu yemekleri ve mutfak ile ilgili sorulara cevap ver.
-                    Eğer soru bunlarla ilgili değilse "Üzgünüm, sadece yemek ile ilgili sorulara cevap verebilirim." de.
-                    
-                    Kullanıcı sorusu: $userQuestion
-                """.trimIndent()
+Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.
+Eğer soru yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet programları, protein, vitamin veya sağlıklı yaşam ile ilgiliyse mutlaka cevap ver.
+Konu doğrudan yemek tarifleri olmasa bile, yemekle veya beslenmeyle dolaylı olarak ilgiliyse cevap vermeye çalış.
+Sadece tamamen yemek, beslenme veya mutfak ile ilgisi olmayan soruları reddet.
+
+Kullanıcı sorusu: $userQuestion
+""".trimIndent()
+
 
                 val messagesArray = JSONArray()
                 messagesArray.put(JSONObject().put("role", "system").put("content", "Sen sadece yemek konularında konuşan bir asistansın."))
