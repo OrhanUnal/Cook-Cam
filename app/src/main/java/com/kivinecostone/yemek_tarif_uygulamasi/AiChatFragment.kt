@@ -193,9 +193,8 @@ class AiChatFragment : Fragment() {
                                     val botIndex = messages.size - 1
                                     adapter.notifyItemInserted(botIndex)
                                     typeWriterEffect(content.trim(), botIndex)
-                                    noteEntity = ChatLogEntity(0, response.message)
+                                    noteEntity = ChatLogEntity( title = content)
                                     noteDB.dao().addNote(noteEntity)
-
 
                                 } catch (e: Exception) {
                                     addMessage(ChatMessage("Yanıt çözümlenemedi: ${e.message}", isUser = false))

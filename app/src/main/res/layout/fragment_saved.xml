@@ -16,14 +16,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvEmptyText"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/savedRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="There is no Note :("
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:padding="8dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
