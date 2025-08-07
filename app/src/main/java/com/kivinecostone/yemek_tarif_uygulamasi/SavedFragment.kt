@@ -13,11 +13,6 @@ class SavedFragment : Fragment() {
         lateinit var noteData: NoteData
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Room.databaseBuilder(
-            requireContext(),
-            NoteData::class.java,
-            NoteData.NAME
-        ).build()
         return inflater.inflate(R.layout.fragment_saved, container, false)
     }
 }

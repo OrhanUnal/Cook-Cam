@@ -15,6 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.kivinecostone.yemek_tarif_uygulamasi.database.ChatLogEntity
+import com.kivinecostone.yemek_tarif_uygulamasi.database.NoteData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -38,6 +42,16 @@ class AiChatFragment : Fragment() {
 
     private val OPENAI_API_KEY = "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"
     private val SPEECH_REQUEST_CODE = 100
+
+    private val noteDB: NoteData by lazy {
+        Room.databaseBuilder(requireContext(),
+            NoteData::class.java,
+            "note_database").allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    private lateinit var noteEntity : ChatLogEntity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -179,6 +193,8 @@ class AiChatFragment : Fragment() {
                                     val botIndex = messages.size - 1
                                     adapter.notifyItemInserted(botIndex)
                                     typeWriterEffect(content.trim(), botIndex)
+                                    noteEntity = ChatLogEntity(0, response.message)
+                                    noteDB.dao().addNote(noteEntity)
 
 
                                 } catch (e: Exception) {
