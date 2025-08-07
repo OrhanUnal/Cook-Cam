@@ -152,6 +152,9 @@ class AiChatFragment : Fragment() {
                 Kullanıcı mesajı: $userQuestion
                 """.trimIndent()
 
+                noteEntity = ChatLogEntity(0, title = userQuestion, true )
+                noteDB.dao().addNote(noteEntity)
+
                 val messagesArray = JSONArray()
                 messagesArray.put(JSONObject().put("role", "system").put("content", "Sen sadece yemek, beslenme ve mutfak konularında konuşan bir asistansın."))
                 messagesArray.put(JSONObject().put("role", "user").put("content", prompt))
@@ -193,7 +196,7 @@ class AiChatFragment : Fragment() {
                                     val botIndex = messages.size - 1
                                     adapter.notifyItemInserted(botIndex)
                                     typeWriterEffect(content.trim(), botIndex)
-                                    noteEntity = ChatLogEntity( title = content)
+                                    noteEntity = ChatLogEntity(0, title = content, false )
                                     noteDB.dao().addNote(noteEntity)
 
                                 } catch (e: Exception) {

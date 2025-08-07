@@ -13,7 +13,7 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
     private var notes = listOf<ChatLogEntity>()
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleView: TextView = itemView.findViewById(R.id.textViewSavedTitle)
+        val titleView: TextView = itemView.findViewById(R.id.textViewSavedAiTitle)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -24,6 +24,9 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notes[position]
         holder.titleView.text = note.title
+        if (!note.is_user){
+            holder.titleView.textSize = 50f
+        }
     }
 
     override fun getItemCount(): Int = notes.size

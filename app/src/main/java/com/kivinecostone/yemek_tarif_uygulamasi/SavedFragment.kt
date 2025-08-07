@@ -14,7 +14,7 @@ import com.kivinecostone.yemek_tarif_uygulamasi.database.NoteData
 class SavedFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: SavedAdapter // Yeni bir adapter tanımlayacağız
+    private lateinit var adapter: SavedAdapter
     private lateinit var noteDB: NoteData
 
     override fun onCreateView(
@@ -32,11 +32,9 @@ class SavedFragment : Fragment() {
             NoteData::class.java,
             "note_database"
         ).allowMainThreadQueries().build()
-
-        noteDB.dao().getAllNotes().observe(viewLifecycleOwner) { notes ->
+        noteDB.dao().getAllNotes().observe(viewLifecycleOwner){notes ->
             adapter.setData(notes)
         }
-
         return view
     }
 }

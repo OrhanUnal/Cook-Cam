@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class ChatLogEntity(
     @PrimaryKey(autoGenerate = true)
     val noteId: Int = 0,
-    val title : String
+    val title : String,
+    val is_user: Boolean
 )

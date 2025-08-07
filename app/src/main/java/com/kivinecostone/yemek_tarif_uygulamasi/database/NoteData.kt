@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [ChatLogEntity::class], version = 1)
+@Database(entities = [ChatLogEntity::class], version = 2)
 abstract class NoteData: RoomDatabase(){
     companion object{
         const val NAME = "Notes"
