@@ -1,12 +1,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:gravity="top|center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
-        android:text="Bu Takvim ekranıdır"
-        android:textSize="24sp"
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Kalori Takibi"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/calorieText"
+
+        android:textSize="48sp"
+        android:layout_marginBottom="24dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+
+    <EditText
+        android:id="@+id/inputAmount"
+        android:hint="Kaç kalori?"
+        android:inputType="number"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"/>
+
+    <Button
+        android:id="@+id/addButton"
+        android:text="@string/add_button_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFBB33"
+        android:textColor="#000000"/>
+
+    <Button
+        android:id="@+id/removeButton"
+        android:text="@string/remove_button_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kaydet"
+        android:layout_marginTop="24dp"/>
 </LinearLayout>
