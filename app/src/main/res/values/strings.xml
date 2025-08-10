@@ -2,6 +2,7 @@
     <string name="remove_button_text">Çıkar</string>
     <string name="add_button_text">Ekle</string>
     <string name="app_name">Yemek_Tarif_Uygulamasi</string>
+    <string name="today_calories_fmt">Bugünkü Kalorin: %1$d</string>
 
 
 </resources>

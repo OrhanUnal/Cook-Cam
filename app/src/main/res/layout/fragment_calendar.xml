@@ -1,54 +1,96 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center_horizontal"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kalori Takibi"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="32dp"/>
+        android:orientation="vertical"
+        android:gravity="top|center_horizontal"
+        android:padding="16dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
-    <TextView
-        android:id="@+id/calorieText"
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kalori Takibi"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
 
-        android:textSize="48sp"
-        android:layout_marginBottom="24dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/calorieText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="48sp"
+            android:layout_marginBottom="16dp"/>
 
-    <EditText
-        android:id="@+id/inputAmount"
-        android:hint="Kaç kalori?"
-        android:inputType="number"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"/>
+        <TextView
+            android:id="@+id/todayCaloriesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textStyle="italic"
+            android:layout_marginBottom="16dp"/>
 
-    <Button
-        android:id="@+id/addButton"
-        android:text="@string/add_button_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FFBB33"
-        android:textColor="#000000"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
 
-    <Button
-        android:id="@+id/removeButton"
-        android:text="@string/remove_button_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+            <Button
+                android:id="@+id/removeButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="−"
+                android:textSize="20sp"
+                android:padding="0dp"
+                android:layout_marginEnd="12dp"/>
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kaydet"
-        android:layout_marginTop="24dp"/>
-</LinearLayout>
+            <EditText
+                android:id="@+id/inputAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Kaç kalori?"
+                android:inputType="number"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/addButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="+"
+                android:textSize="20sp"
+                android:padding="0dp"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kaydet"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/selectedDayCaloriesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="20sp"/>
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</ScrollView>
