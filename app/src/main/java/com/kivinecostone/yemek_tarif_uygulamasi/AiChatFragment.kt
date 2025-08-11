@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.kivinecostone.yemek_tarif_uygulamasi.Adapter.ChatAdapter
 import com.kivinecostone.yemek_tarif_uygulamasi.database.ChatLogEntity
 import com.kivinecostone.yemek_tarif_uygulamasi.database.NoteData
 import kotlinx.coroutines.CoroutineScope

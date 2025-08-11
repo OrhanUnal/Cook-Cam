@@ -1,4 +1,4 @@
-package com.kivinecostone.yemek_tarif_uygulamasi
+package com.kivinecostone.yemek_tarif_uygulamasi.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.kivinecostone.yemek_tarif_uygulamasi.ChatMessage
+import com.kivinecostone.yemek_tarif_uygulamasi.R
 
 class ChatAdapter(private val messages: MutableList<ChatMessage>) :
 
