@@ -11,22 +11,36 @@ import com.kivinecostone.yemek_tarif_uygulamasi.database.ChatLogEntity
 class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
 
     private var notes = listOf<ChatLogEntity>()
+    private var userView = 0
+    private var botView = 1
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleView: TextView = itemView.findViewById(R.id.textViewSavedAiTitle)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return if (notes[position].is_user) {
+            userView
+        } else {
+            botView
+        }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
-        return NoteViewHolder(view)
+        return when (viewType){
+            userView -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note_user, parent, false)
+                NoteViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note_bot, parent, false)
+                NoteViewHolder(view)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notes[position]
         holder.titleView.text = note.title
-        if (!note.is_user){
-            holder.titleView.textSize = 50f
-        }
     }
 
     override fun getItemCount(): Int = notes.size
