@@ -74,8 +74,13 @@ class CalendarFragment : Fragment() {
             val input = inputAmount.text.toString()
             if (input.isNotEmpty()) {
                 val amount = input.toInt()
-                calorieCount -= amount
                 calorieText.text = calorieCount.toString()
+                if (calorieCount <= 0) {
+                    calorieCount = 0
+                    Toast.makeText(requireContext(), "Lütfen pozitif bir sayı girin", Toast.LENGTH_SHORT).show()
+                }else{
+                    calorieCount -= amount
+                }
             } else {
                 Toast.makeText(requireContext(), "Lütfen bir sayı gir", Toast.LENGTH_SHORT).show()
             }
@@ -96,18 +101,10 @@ class CalendarFragment : Fragment() {
             val dateKey = "$year-$mm-$dd"
             val dayCalories = prefs.getInt(dateKey, 0)
             selectedDayCaloriesText.text = "Seçilen Gün Kalorisi: $dayCalories"
-            val isToday = dateKey == todayDate
+            val isToday = dateKey <= todayDate
             setEditingEnabled(isToday)
         }
 
         return root
     }
 }
-
-
-class CalendarFragment1 : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_calendar, container, false)
-    }
-}
-

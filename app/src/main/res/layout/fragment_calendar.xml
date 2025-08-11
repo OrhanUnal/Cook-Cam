@@ -56,11 +56,11 @@
             <EditText
                 android:id="@+id/inputAmount"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:hint="Kaç kalori?"
-                android:inputType="number"
-                android:gravity="center"/>
+                android:inputType="number" />
 
             <Button
                 android:id="@+id/addButton"
