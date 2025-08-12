@@ -33,6 +33,8 @@ class CameraFragment : Fragment() {
     companion object {
         private const val CAMERA_PERMISSION_CODE = 1
         private const val CAMERA_REQUEST_CODE = 2
+        private const val GALLERY_PERMISSION_CODE = 3
+        private const val  GALLERY_REQUEST_CODE = 4
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,6 +46,7 @@ class CameraFragment : Fragment() {
 
         ivImage = view.findViewById(R.id.iv_image)
         tvResult = view.findViewById(R.id.tv_result)
+        val btnGallery = view.findViewById<Button>(R.id.btn_gallery)
         val btnCamera = view.findViewById<Button>(R.id.btn_camera)
 
         btnCamera.setOnClickListener {
@@ -60,6 +63,28 @@ class CameraFragment : Fragment() {
                 )
             }
         }
+
+        btnGallery.setOnClickListener {
+            val galleryPermission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                Manifest.permission.READ_MEDIA_IMAGES
+            } else {
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            }
+
+            if (ContextCompat.checkSelfPermission(requireContext(), galleryPermission)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, GALLERY_REQUEST_CODE)
+            } else {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(galleryPermission),
+                    GALLERY_PERMISSION_CODE
+                )
+            }
+        }
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -72,23 +97,35 @@ class CameraFragment : Fragment() {
                 tvResult.text = "Kamera izni reddedildi."
             }
         }
+        if (requestCode == GALLERY_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, GALLERY_REQUEST_CODE)
+            } else {
+                tvResult.text = "Galeri izni reddedildi."
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        var thumbnail: Bitmap? = null
         if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
-            val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
+            thumbnail = data!!.extras!!.get("data") as Bitmap
             ivImage.setImageBitmap(thumbnail)
 
-            // Fotoğrafı Base64'e çevir
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
-            val imageBytes = byteArrayOutputStream.toByteArray()
-            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
-
-            // AI'ye gönder
-            sendImageToGPT(base64Image)
+        } else if (resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE && data != null) {
+            val imageUri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
+            thumbnail = bitmap
+            ivImage.setImageBitmap(thumbnail)
         }
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        thumbnail?.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+        val imageBytes = byteArrayOutputStream.toByteArray()
+        val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+
+        sendImageToGPT(base64Image)
     }
 
     private fun sendImageToGPT(base64Image: String) {
