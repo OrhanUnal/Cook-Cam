@@ -5,7 +5,6 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
-
     <ImageView
         android:id="@+id/avatarImage"
         android:layout_width="40dp"
@@ -16,15 +15,30 @@
         android:scaleType="centerCrop"
         android:contentDescription="Bot avatarı" />
 
-
-    <TextView
-        android:id="@+id/messageText"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="250dp"
-        android:background="@drawable/bg_bot_message"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:lineSpacingExtra="4dp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="250dp"
+            android:background="@drawable/bg_bot_message"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp" />
+
+        <TextView
+            android:id="@+id/messageTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="#7A7A7A"
+            android:layout_marginTop="2dp"
+            android:gravity="start" />
+    </LinearLayout>
+
 </LinearLayout>

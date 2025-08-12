@@ -12,11 +12,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.kivinecostone.yemek_tarif_uygulamasi.Adapter.ChatAdapter
 import com.kivinecostone.yemek_tarif_uygulamasi.database.ChatLogEntity
 import com.kivinecostone.yemek_tarif_uygulamasi.database.NoteData
@@ -30,6 +28,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AiChatFragment : Fragment() {
@@ -41,21 +40,26 @@ class AiChatFragment : Fragment() {
     private val messages = mutableListOf<ChatMessage>()
     private lateinit var adapter: ChatAdapter
 
-    private val OPENAI_API_KEY = "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"
+    private val OPENAI_API_KEY =
+        "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"
     private val SPEECH_REQUEST_CODE = 100
 
     private val noteDB: NoteData by lazy {
-        Room.databaseBuilder(requireContext(),
+        Room.databaseBuilder(
+            requireContext(),
             NoteData::class.java,
-            "note_database").allowMainThreadQueries()
+            "note_database"
+        )
+            .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
     }
 
-    private lateinit var noteEntity : ChatLogEntity
+    private lateinit var noteEntity: ChatLogEntity
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_ai_chat, container, false)
@@ -72,25 +76,35 @@ class AiChatFragment : Fragment() {
         sendButton.setOnClickListener {
             val text = userInput.text.toString().trim()
             if (text.isNotEmpty()) {
-                addMessage(ChatMessage(text, isUser = true))
+                val nowTime = currentTime()
+                val nowDate = currentDate()
+                addMessage(ChatMessage(text, isUser = true, time = nowTime, date = nowDate))
                 userInput.setText("")
                 showTypingIndicator()
                 getAiResponse(text)
             }
         }
 
-        btnVoice.setOnClickListener {
-            startSpeechToText()
-        }
+        btnVoice.setOnClickListener { startSpeechToText() }
 
         return view
     }
 
+    private fun currentTime(): String =
+        SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+    private fun currentDate(): String =
+        SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
+
     private fun startSpeechToText() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "tr-TR")
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Konuşabilirsiniz...")
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "tr-TR")
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "Konuşabilirsiniz...")
+        }
         try {
             startActivityForResult(intent, SPEECH_REQUEST_CODE)
         } catch (e: ActivityNotFoundException) {
@@ -114,11 +128,18 @@ class AiChatFragment : Fragment() {
     }
 
     private fun showTypingIndicator() {
-        messages.add(ChatMessage(message = "", isUser = false, isTyping = true))
+        messages.add(
+            ChatMessage(
+                message = "",
+                isUser = false,
+                isTyping = true,
+                time = currentTime(),
+                date = currentDate()
+            )
+        )
         adapter.notifyItemInserted(messages.size - 1)
         recyclerView.scrollToPosition(messages.size - 1)
     }
-
 
     private fun removeTypingIndicator() {
         val index = messages.indexOfFirst { it.isTyping }
@@ -146,26 +167,33 @@ class AiChatFragment : Fragment() {
                 val client = OkHttpClient()
 
                 val prompt = """
-                Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.
-                Eğer kullanıcı mesajı yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet, protein, vitamin veya sağlıklı yaşam ile ilgiliyse net bir şekilde cevap ver.
-                Eğer konu tamamen yemekle ilgisizse kibarca "Bu konuda yardımcı olamıyorum." de.
-                
-                Kullanıcı mesajı: $userQuestion
+                    Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.
+                    Eğer kullanıcı mesajı yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet, protein, vitamin veya sağlıklı yaşam ile ilgiliyse net bir şekilde cevap ver.
+                    Eğer konu tamamen yemekle ilgisizse kibarca "Bu konuda yardımcı olamıyorum." de.
+                    
+                    Kullanıcı mesajı: $userQuestion
                 """.trimIndent()
 
-                noteEntity = ChatLogEntity(0, title = userQuestion, true )
+                noteEntity = ChatLogEntity(0, title = userQuestion, true)
                 noteDB.dao().addNote(noteEntity)
 
-                val messagesArray = JSONArray()
-                messagesArray.put(JSONObject().put("role", "system").put("content", "Sen sadece yemek, beslenme ve mutfak konularında konuşan bir asistansın."))
-                messagesArray.put(JSONObject().put("role", "user").put("content", prompt))
+                val messagesArray = JSONArray().apply {
+                    put(
+                        JSONObject()
+                            .put("role", "system")
+                            .put("content", "Sen sadece yemek, beslenme ve mutfak konularında konuşan bir asistansın.")
+                    )
+                    put(JSONObject().put("role", "user").put("content", prompt))
+                }
 
-                val json = JSONObject()
-                json.put("model", "gpt-3.5-turbo")
-                json.put("messages", messagesArray)
-                json.put("max_tokens", 500)
+                val json = JSONObject().apply {
+                    put("model", "gpt-3.5-turbo")
+                    put("messages", messagesArray)
+                    put("max_tokens", 500)
+                }
 
-                val requestBody = json.toString().toRequestBody("application/json".toMediaType())
+                val requestBody =
+                    json.toString().toRequestBody("application/json".toMediaType())
 
                 val request = Request.Builder()
                     .url("https://api.openai.com/v1/chat/completions")
@@ -177,7 +205,14 @@ class AiChatFragment : Fragment() {
                     override fun onFailure(call: Call, e: IOException) {
                         activity?.runOnUiThread {
                             removeTypingIndicator()
-                            addMessage(ChatMessage("Hata: ${e.message}", isUser = false))
+                            addMessage(
+                                ChatMessage(
+                                    "Hata: ${e.message}",
+                                    isUser = false,
+                                    time = currentTime(),
+                                    date = currentDate()
+                                )
+                            )
                         }
                     }
 
@@ -192,19 +227,41 @@ class AiChatFragment : Fragment() {
                                         .getJSONObject(0)
                                         .getJSONObject("message")
                                         .getString("content")
+                                        .trim()
 
-                                    messages.add(ChatMessage("", isUser = false))
+                                    messages.add(
+                                        ChatMessage(
+                                            "",
+                                            isUser = false,
+                                            time = currentTime(),
+                                            date = currentDate()
+                                        )
+                                    )
                                     val botIndex = messages.size - 1
                                     adapter.notifyItemInserted(botIndex)
-                                    typeWriterEffect(content.trim(), botIndex)
-                                    noteEntity = ChatLogEntity(0, title = content, false )
-                                    noteDB.dao().addNote(noteEntity)
+                                    typeWriterEffect(content, botIndex)
 
+                                    noteEntity = ChatLogEntity(0, title = content, false)
+                                    noteDB.dao().addNote(noteEntity)
                                 } catch (e: Exception) {
-                                    addMessage(ChatMessage("Yanıt çözümlenemedi: ${e.message}", isUser = false))
+                                    addMessage(
+                                        ChatMessage(
+                                            "Yanıt çözümlenemedi: ${e.message}",
+                                            isUser = false,
+                                            time = currentTime(),
+                                            date = currentDate()
+                                        )
+                                    )
                                 }
                             } else {
-                                addMessage(ChatMessage("Hata: ${response.message}", isUser = false))
+                                addMessage(
+                                    ChatMessage(
+                                        "Hata: ${response.message}",
+                                        isUser = false,
+                                        time = currentTime(),
+                                        date = currentDate()
+                                    )
+                                )
                             }
                         }
                     }
@@ -212,7 +269,14 @@ class AiChatFragment : Fragment() {
             } catch (e: Exception) {
                 activity?.runOnUiThread {
                     removeTypingIndicator()
-                    addMessage(ChatMessage("Hata: ${e.message}", isUser = false))
+                    addMessage(
+                        ChatMessage(
+                            "Hata: ${e.message}",
+                            isUser = false,
+                            time = currentTime(),
+                            date = currentDate()
+                        )
+                    )
                 }
             }
         }

@@ -10,7 +10,6 @@ import com.kivinecostone.yemek_tarif_uygulamasi.ChatMessage
 import com.kivinecostone.yemek_tarif_uygulamasi.R
 
 class ChatAdapter(private val messages: MutableList<ChatMessage>) :
-
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val viewTypeUser = 0
@@ -19,6 +18,7 @@ class ChatAdapter(private val messages: MutableList<ChatMessage>) :
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val messageText: TextView = itemView.findViewById(R.id.messageText)
+        val messageTime: TextView = itemView.findViewById(R.id.messageTime)
         val avatarImage: ImageView = itemView.findViewById(R.id.avatarImage)
     }
 
@@ -56,6 +56,7 @@ class ChatAdapter(private val messages: MutableList<ChatMessage>) :
         val message = messages[position]
         if (holder is MessageViewHolder) {
             holder.messageText.text = message.message
+            holder.messageTime.text = "${message.time}  ·  ${message.date}"
             if (message.isUser) {
                 holder.avatarImage.setImageResource(R.drawable.ic_user)
             } else {
