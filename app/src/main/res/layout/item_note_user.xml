@@ -14,9 +14,9 @@
         android:background="@drawable/bg_user_message"
         android:maxWidth="250dp"
         android:padding="12dp"
-        android:text="Mesaj"
         android:textColor="#000000"
-        android:textSize="24sp" />
+        android:textSize="16sp"
+        android:lineSpacingExtra="4dp" />
 
     <ImageView
         android:id="@+id/avatarImage"
