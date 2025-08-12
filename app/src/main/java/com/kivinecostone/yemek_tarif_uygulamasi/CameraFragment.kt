@@ -23,9 +23,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import kotlinx.coroutines.*
 
 class CameraFragment : Fragment() {
 
+    private var typingJob: Job? = null
     private val CAMERA_AI_API = "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"
     private lateinit var ivImage: ImageView
     private lateinit var tvResult: TextView
@@ -128,7 +130,37 @@ class CameraFragment : Fragment() {
         sendImageToGPT(base64Image)
     }
 
+    private fun typeWriterEffect(fullText: String) {
+        typingJob?.cancel()
+        typingJob = CoroutineScope(Dispatchers.Main).launch {
+            tvResult.text = ""
+            for (char in fullText) {
+                tvResult.append(char.toString())
+                delay(30)
+            }
+        }
+    }
+
+    private fun showWaitingDots() {
+        typingJob?.cancel()
+        typingJob = CoroutineScope(Dispatchers.Main).launch {
+            val dots = listOf("", ".", "..", "...")
+            var index = 0
+            while (isActive) {
+                tvResult.text = "Yanıt bekleniyor${dots[index % dots.size]}"
+                index++
+                delay(200)
+            }
+        }
+    }
+
+    private fun stopWaitingDots() {
+        typingJob?.cancel()
+    }
+
+
     private fun sendImageToGPT(base64Image: String) {
+        showWaitingDots()
         val client = OkHttpClient()
         val mediaType = "application/json".toMediaType()
 
@@ -185,7 +217,8 @@ class CameraFragment : Fragment() {
                         .getString("content")
 
                     requireActivity().runOnUiThread {
-                        tvResult.text = "$botMessage"
+                        stopWaitingDots()
+                        typeWriterEffect(botMessage)
                     }
                 } catch (e: Exception) {
                     requireActivity().runOnUiThread {
