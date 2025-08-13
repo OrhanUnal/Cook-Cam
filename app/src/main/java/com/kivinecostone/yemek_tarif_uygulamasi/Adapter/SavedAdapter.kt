@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.kivinecostone.yemek_tarif_uygulamasi.R
 import com.kivinecostone.yemek_tarif_uygulamasi.database.ChatLogEntity
@@ -24,12 +25,10 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (notes[position].is_user) {
-            userView
-        } else if (!notes[position].is_user) {
-            botView
-        } else{
-            dateBar
+        return when (notes[position].isUser) {
+            0 -> userView
+            1 -> botView
+            else -> dateBar
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -52,10 +51,16 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
         val note = notes[position]
         holder.titleView.text = note.title
         holder.messageTime.text = note.time
-        if (note.is_user) {
-            holder.avatarImage.setImageResource(R.drawable.ic_user)
-        } else {
-            holder.avatarImage.setImageResource(R.drawable.ic_bot_chef)
+        when (note.isUser) {
+            0 -> {
+                holder.avatarImage.setImageResource(R.drawable.ic_user)
+            }
+            1 -> {
+                holder.avatarImage.setImageResource(R.drawable.ic_bot_chef)
+            }
+            else -> {
+                holder.avatarImage.isInvisible
+            }
         }
     }
 

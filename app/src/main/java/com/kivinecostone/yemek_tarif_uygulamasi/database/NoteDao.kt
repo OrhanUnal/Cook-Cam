@@ -15,5 +15,4 @@ interface NoteDao {
 
     @Insert
     fun addNote(note : ChatLogEntity)
-
 }

@@ -38,6 +38,7 @@ class AiChatFragment : Fragment() {
     private lateinit var sendButton: Button
     private lateinit var btnVoice: ImageButton
     private val messages = mutableListOf<ChatMessage>()
+    private var notes = listOf<ChatLogEntity>()
     private lateinit var adapter: ChatAdapter
 
     private val OPENAI_API_KEY =
@@ -56,6 +57,8 @@ class AiChatFragment : Fragment() {
     }
 
     private lateinit var noteEntity: ChatLogEntity
+    private lateinit var dateBar: ChatLogEntity
+    var currentDate : String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +66,16 @@ class AiChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_ai_chat, container, false)
-
+        var i = 0
+        noteDB.dao().getAllNotes().observe(viewLifecycleOwner) { list ->
+            notes = list
+            while (notes.size > i){
+                if (notes[i].isUser == 2){
+                    currentDate = notes[i].date
+                }
+                i++
+            }
+        }
         recyclerView = view.findViewById(R.id.recyclerViewChat)
         userInput = view.findViewById(R.id.userInput)
         sendButton = view.findViewById(R.id.sendButton)
@@ -173,10 +185,13 @@ class AiChatFragment : Fragment() {
                     
                     Kullanıcı mesajı: $userQuestion
                 """.trimIndent()
-
-                noteEntity = ChatLogEntity(0, title = userQuestion, true, currentTime(), currentDate())
+                if (currentDate != currentDate()){
+                    dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate())
+                    noteDB.dao().addNote(dateBar)
+                    currentDate = currentDate()
+                }
+                noteEntity = ChatLogEntity(0, title = userQuestion, 0, currentTime(), currentDate())
                 noteDB.dao().addNote(noteEntity)
-
                 val messagesArray = JSONArray().apply {
                     put(
                         JSONObject()
@@ -241,7 +256,7 @@ class AiChatFragment : Fragment() {
                                     adapter.notifyItemInserted(botIndex)
                                     typeWriterEffect(content, botIndex)
 
-                                    noteEntity = ChatLogEntity(0, title = content, false, currentTime(), currentDate())
+                                    noteEntity = ChatLogEntity(0, title = content, 1, currentTime(), currentDate())
                                     noteDB.dao().addNote(noteEntity)
                                 } catch (e: Exception) {
                                     addMessage(
