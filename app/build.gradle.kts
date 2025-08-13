@@ -62,4 +62,5 @@ dependencies {
     implementation("org.json:json:20230227")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.2")
+    implementation("com.prolificinteractive:material-calendarview:1.4.3")
 }

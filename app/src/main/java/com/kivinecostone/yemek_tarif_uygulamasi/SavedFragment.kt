@@ -1,5 +1,6 @@
 package com.kivinecostone.yemek_tarif_uygulamasi
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
