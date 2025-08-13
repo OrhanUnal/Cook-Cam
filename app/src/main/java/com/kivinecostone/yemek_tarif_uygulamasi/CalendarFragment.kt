@@ -1,16 +1,17 @@
 package com.kivinecostone.yemek_tarif_uygulamasi
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import com.prolificinteractive.materialcalendarview.*
+import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import java.text.SimpleDateFormat
 import java.util.*
-import com.prolificinteractive.materialcalendarview.*
 
 class CalendarFragment : Fragment() {
 
@@ -35,8 +36,8 @@ class CalendarFragment : Fragment() {
         val calendarView = root.findViewById<MaterialCalendarView>(R.id.calendarView)
 
         val prefs = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val todayDate = sdf.format(Date())
+        val sdfIso = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val todayDate = sdfIso.format(Date())
         var selectedDate = todayDate
 
         fun setEditingEnabled(enable: Boolean) {
@@ -67,21 +68,38 @@ class CalendarFragment : Fragment() {
             todayCaloriesText.text = "Bugünkü Kalorin: $todaySaved"
         }
 
-        fun allEntryDays(): Set<CalendarDay> {
-            val out = HashSet<CalendarDay>()
-            val fmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        fun buildRadiusListFromPrefs(): List<Pair<CalendarDay, Float>> {
+            val items = mutableListOf<Pair<CalendarDay, Int>>()
             val re = Regex("\\d{4}-\\d{2}-\\d{2}")
             for ((k, v) in prefs.all) {
                 if (v is Int && re.matches(k)) {
-                    val parsed = fmt.parse(k)
-                    if (parsed != null) {
-                        out.add(CalendarDay.from(parsed))
-                    }
+                    val parsed = sdfIso.parse(k)
+                    if (parsed != null) items.add(CalendarDay.from(parsed) to v)
                 }
             }
-            return out
+            if (items.isEmpty()) return emptyList()
+            val minVal = items.minOf { it.second }
+            val maxVal = items.maxOf { it.second }
+            val minR = 3f
+            val maxR = 12f
+            return items.map { (day, value) ->
+                val radius = if (maxVal == minVal) {
+                    (minR + maxR) / 2f
+                } else {
+                    val t = (value - minVal).toFloat() / (maxVal - minVal).toFloat()
+                    minR + t * (maxR - minR)
+                }
+                day to radius
+            }
         }
 
+        fun applyPerDayRadiusDecorators() {
+            calendarView.removeDecorators()
+            val radiusList = buildRadiusListFromPrefs()
+            for ((day, radius) in radiusList) {
+                calendarView.addDecorator(PerDayRadiusDecorator(day, radius, Color.parseColor("#FF5722")))
+            }
+        }
 
         val todaySavedInit = prefs.getInt(todayDate, 0)
         todayCaloriesText.text = "Bugünkü Kalorin: $todaySavedInit"
@@ -92,7 +110,7 @@ class CalendarFragment : Fragment() {
 
         calendarView.clearSelection()
         calendarView.setSelectedDate(CalendarDay.today())
-        calendarView.addDecorator(EntryDaysDecorator(allEntryDays()))
+        applyPerDayRadiusDecorators()
 
         addButton.setOnClickListener {
             val input = inputAmount.text.toString()
@@ -130,15 +148,12 @@ class CalendarFragment : Fragment() {
                 todayCaloriesText.text = "Bugünkü Kalorin: $calorieCount"
             }
             selectedDayCaloriesText.text = "Seçilen Gün Kalorisi: $calorieCount"
-            calendarView.removeDecorators()
-            calendarView.addDecorator(EntryDaysDecorator(allEntryDays()))
+            applyPerDayRadiusDecorators()
             Toast.makeText(requireContext(), "Kaydedildi", Toast.LENGTH_SHORT).show()
         }
 
         calendarView.setOnDateChangedListener(OnDateSelectedListener { _, date, _ ->
-            val fmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val dateKey = fmt.format(date.date)
-
+            val dateKey = sdfIso.format(date.date)
             selectedDate = dateKey
             val canEdit = dateKey <= todayDate
             setEditingEnabled(canEdit)
@@ -146,5 +161,16 @@ class CalendarFragment : Fragment() {
         })
 
         return root
+    }
+
+    inner class PerDayRadiusDecorator(
+        private val day: CalendarDay,
+        private val radius: Float,
+        private val color: Int
+    ) : DayViewDecorator {
+        override fun shouldDecorate(d: CalendarDay): Boolean = d == day
+        override fun decorate(view: DayViewFacade) {
+            view.addSpan(DotSpan(radius, color))
+        }
     }
 }
