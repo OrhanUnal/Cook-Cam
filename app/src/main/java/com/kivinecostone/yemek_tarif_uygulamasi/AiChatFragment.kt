@@ -174,7 +174,7 @@ class AiChatFragment : Fragment() {
                     Kullanıcı mesajı: $userQuestion
                 """.trimIndent()
 
-                noteEntity = ChatLogEntity(0, title = userQuestion, true)
+                noteEntity = ChatLogEntity(0, title = userQuestion, true, currentTime(), currentDate())
                 noteDB.dao().addNote(noteEntity)
 
                 val messagesArray = JSONArray().apply {
@@ -241,7 +241,7 @@ class AiChatFragment : Fragment() {
                                     adapter.notifyItemInserted(botIndex)
                                     typeWriterEffect(content, botIndex)
 
-                                    noteEntity = ChatLogEntity(0, title = content, false)
+                                    noteEntity = ChatLogEntity(0, title = content, false, currentTime(), currentDate())
                                     noteDB.dao().addNote(noteEntity)
                                 } catch (e: Exception) {
                                     addMessage(

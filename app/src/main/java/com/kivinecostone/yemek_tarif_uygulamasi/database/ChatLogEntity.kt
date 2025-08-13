@@ -8,5 +8,7 @@ data class ChatLogEntity(
     @PrimaryKey(autoGenerate = true)
     val noteId: Int = 0,
     val title : String,
-    val is_user: Boolean
+    val is_user: Boolean,
+    val time: String,
+    val date: String
 )
