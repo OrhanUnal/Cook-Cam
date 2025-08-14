@@ -61,6 +61,8 @@ class AiChatFragment : Fragment() {
     private lateinit var dateBar: ChatLogEntity
     var currentDate : String = ""
 
+    private val MAX_CONTEXT_ITEMS = 3
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -174,18 +176,24 @@ class AiChatFragment : Fragment() {
         }
     }
 
+    private fun buildMessagesForApi(): JSONArray {
+        val arr = JSONArray()
+        arr.put(JSONObject().put("role","system").put("content","Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.\n" +
+                "                    Eğer kullanıcı mesajı yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet, protein, vitamin veya sağlıklı yaşam ile ilgiliyse net bir şekilde cevap ver.\n" +
+                "                    Eğer konu tamamen yemekle ilgisizse kibarca \"Bu konuda yardımcı olamıyorum.\" de.\n"))
+        val history = messages.filter { !it.isTyping && it.message.isNotBlank() }.takeLast(MAX_CONTEXT_ITEMS)
+        for (m in history) {
+            val role = if (m.isUser) "user" else "assistant"
+            arr.put(JSONObject().put("role", role).put("content", m.message))
+        }
+        return arr
+    }
+
     private fun getAiResponse(userQuestion: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val client = OkHttpClient()
 
-                val prompt = """
-                    Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.
-                    Eğer kullanıcı mesajı yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet, protein, vitamin veya sağlıklı yaşam ile ilgiliyse net bir şekilde cevap ver.
-                    Eğer konu tamamen yemekle ilgisizse kibarca "Bu konuda yardımcı olamıyorum." de.
-                    
-                    Kullanıcı mesajı: $userQuestion
-                """.trimIndent()
                 if (currentDate != currentDate()){
                     dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate(), null)
                     noteDB.dao().addNote(dateBar)
@@ -193,14 +201,8 @@ class AiChatFragment : Fragment() {
                 }
                 noteEntity = ChatLogEntity(0, title = userQuestion, 0, currentTime(), currentDate(), null)
                 noteDB.dao().addNote(noteEntity)
-                val messagesArray = JSONArray().apply {
-                    put(
-                        JSONObject()
-                            .put("role", "system")
-                            .put("content", "Sen sadece yemek, beslenme ve mutfak konularında konuşan bir asistansın.")
-                    )
-                    put(JSONObject().put("role", "user").put("content", prompt))
-                }
+
+                val messagesArray = buildMessagesForApi()
 
                 val json = JSONObject().apply {
                     put("model", "gpt-3.5-turbo")
