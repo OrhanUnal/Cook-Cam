@@ -17,6 +17,9 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.room.Room
+import com.kivinecostone.yemek_tarif_uygulamasi.database.ChatLogEntity
+import com.kivinecostone.yemek_tarif_uygulamasi.database.NoteData
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -24,6 +27,9 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CameraFragment : Fragment() {
 
@@ -31,12 +37,24 @@ class CameraFragment : Fragment() {
     private val CAMERA_AI_API = "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"
     private lateinit var ivImage: ImageView
     private lateinit var tvResult: TextView
+    private lateinit var imageNote: ChatLogEntity
 
     companion object {
         private const val CAMERA_PERMISSION_CODE = 1
         private const val CAMERA_REQUEST_CODE = 2
         private const val GALLERY_PERMISSION_CODE = 3
         private const val  GALLERY_REQUEST_CODE = 4
+    }
+
+    private val noteDB: NoteData by lazy {
+        Room.databaseBuilder(
+            requireContext(),
+            NoteData::class.java,
+            "note_database"
+        )
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -109,6 +127,12 @@ class CameraFragment : Fragment() {
         }
     }
 
+    private fun currentTime(): String =
+        SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+    private fun currentDate(): String =
+        SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         var thumbnail: Bitmap? = null
@@ -122,8 +146,10 @@ class CameraFragment : Fragment() {
             thumbnail = bitmap
             ivImage.setImageBitmap(thumbnail)
         }
+        imageNote = ChatLogEntity(0, "", 3, currentTime(), currentDate(), thumbnail)
+        noteDB.dao().addNote(imageNote)
         val byteArrayOutputStream = ByteArrayOutputStream()
-        thumbnail?.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+        thumbnail?.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
         val imageBytes = byteArrayOutputStream.toByteArray()
         val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
 

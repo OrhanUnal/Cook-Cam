@@ -1,5 +1,6 @@
 package com.kivinecostone.yemek_tarif_uygulamasi.database
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,5 +11,6 @@ data class ChatLogEntity(
     val title : String,
     val isUser: Int = 0, // 0 = user, 1 = bot, 2 = dateBar
     val time: String,
-    val date: String
+    val date: String,
+    val image: Bitmap? = null
 )

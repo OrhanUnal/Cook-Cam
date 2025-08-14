@@ -44,4 +44,12 @@
         android:textSize="16sp"
         android:layout_marginStart="100dp" />
 
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:background="#929292"
+        android:contentDescription="CameraImage"
+        android:scaleType="centerCrop" />
+
 </LinearLayout>

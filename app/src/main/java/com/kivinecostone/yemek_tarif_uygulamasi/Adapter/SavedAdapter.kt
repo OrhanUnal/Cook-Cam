@@ -16,19 +16,21 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
     private var userView = 0
     private var botView = 1
     private var dateBar = 2
-    private var currentDate : String = ""
+    private var imageBar = 3
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleView: TextView = itemView.findViewById(R.id.messageText)
         val messageTime: TextView = itemView.findViewById(R.id.messageTime)
         val avatarImage: ImageView = itemView.findViewById(R.id.avatarImage)
+        val ivImage: ImageView = itemView.findViewById(R.id.iv_image)
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (notes[position].isUser) {
             0 -> userView
             1 -> botView
-            else -> dateBar
+            2 -> dateBar
+            else -> imageBar
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -40,8 +42,10 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
             botView -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note_bot, parent, false)
                 NoteViewHolder(view)
-            } else -> {
+            } dateBar -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note_date_bar, parent, false)
+                NoteViewHolder(view)
+            } else -> { val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note_image, parent, false)
                 NoteViewHolder(view)
             }
         }
@@ -54,12 +58,20 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
         when (note.isUser) {
             0 -> {
                 holder.avatarImage.setImageResource(R.drawable.ic_user)
+                holder.ivImage.setVisibility(View.GONE)
             }
             1 -> {
                 holder.avatarImage.setImageResource(R.drawable.ic_bot_chef)
+                holder.ivImage.setVisibility(View.GONE)
             }
-            else -> {
+            2 -> {
                 holder.avatarImage.isInvisible
+                holder.ivImage.setVisibility(View.GONE)
+            }else -> {
+            holder.avatarImage.setImageResource(R.drawable.ic_user)
+            holder.ivImage.setImageBitmap(note.image)
+            holder.titleView.visibility = View.GONE
+            holder.messageTime.visibility = View.GONE
             }
         }
     }

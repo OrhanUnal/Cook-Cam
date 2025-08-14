@@ -3,6 +3,7 @@ package com.kivinecostone.yemek_tarif_uygulamasi
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.LayoutInflater
@@ -186,11 +187,11 @@ class AiChatFragment : Fragment() {
                     Kullanıcı mesajı: $userQuestion
                 """.trimIndent()
                 if (currentDate != currentDate()){
-                    dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate())
+                    dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate(), null)
                     noteDB.dao().addNote(dateBar)
                     currentDate = currentDate()
                 }
-                noteEntity = ChatLogEntity(0, title = userQuestion, 0, currentTime(), currentDate())
+                noteEntity = ChatLogEntity(0, title = userQuestion, 0, currentTime(), currentDate(), null)
                 noteDB.dao().addNote(noteEntity)
                 val messagesArray = JSONArray().apply {
                     put(
@@ -256,7 +257,7 @@ class AiChatFragment : Fragment() {
                                     adapter.notifyItemInserted(botIndex)
                                     typeWriterEffect(content, botIndex)
 
-                                    noteEntity = ChatLogEntity(0, title = content, 1, currentTime(), currentDate())
+                                    noteEntity = ChatLogEntity(0, title = content, 1, currentTime(), currentDate(), null)
                                     noteDB.dao().addNote(noteEntity)
                                 } catch (e: Exception) {
                                     addMessage(
