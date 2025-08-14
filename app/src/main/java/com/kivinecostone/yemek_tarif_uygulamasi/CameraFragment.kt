@@ -152,12 +152,13 @@ class CameraFragment : Fragment() {
         var thumbnail: Bitmap? = null
         if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
             thumbnail = data!!.extras!!.get("data") as Bitmap
+            thumbnail = resizeBitmap(thumbnail, 800)
             ivImage.setImageBitmap(thumbnail)
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE && data != null) {
             val imageUri = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
-            thumbnail = bitmap
+            thumbnail = resizeBitmap(bitmap, 800)
             ivImage.setImageBitmap(thumbnail)
         }
         if (currentDate != currentDate()){
@@ -185,6 +186,21 @@ class CameraFragment : Fragment() {
             }
         }
     }
+
+    fun resizeBitmap(source: Bitmap, maxSize: Int): Bitmap {
+        val aspectRatio = source.width.toFloat() / source.height.toFloat()
+        val width: Int
+        val height: Int
+        if (aspectRatio > 1) {
+            width = maxSize
+            height = (width / aspectRatio).toInt()
+        } else {
+            height = maxSize
+            width = (height * aspectRatio).toInt()
+        }
+        return Bitmap.createScaledBitmap(source, width, height, true)
+    }
+
 
     private fun showWaitingDots() {
         typingJob?.cancel()
