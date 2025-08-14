@@ -152,14 +152,15 @@ class CameraFragment : Fragment() {
         var thumbnail: Bitmap? = null
         if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
             thumbnail = data!!.extras!!.get("data") as Bitmap
-            thumbnail = resizeBitmap(thumbnail, 800)
             ivImage.setImageBitmap(thumbnail)
+            thumbnail = resizeBitmap(thumbnail, 800)
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE && data != null) {
             val imageUri = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
-            thumbnail = resizeBitmap(bitmap, 800)
+            thumbnail = bitmap
             ivImage.setImageBitmap(thumbnail)
+            thumbnail = resizeBitmap(bitmap, 800)
         }
         if (currentDate != currentDate()){
             dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate(), null)
