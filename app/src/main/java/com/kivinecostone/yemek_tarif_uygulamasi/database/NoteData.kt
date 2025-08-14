@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @TypeConverters(Converter::class)
-@Database(entities = [ChatLogEntity::class], version = 8)
+@Database(entities = [ChatLogEntity::class], version = 9)
 abstract class NoteData: RoomDatabase(){
     abstract fun dao():NoteDao
 }

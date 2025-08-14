@@ -38,6 +38,10 @@ class CameraFragment : Fragment() {
     private lateinit var ivImage: ImageView
     private lateinit var tvResult: TextView
     private lateinit var imageNote: ChatLogEntity
+    private lateinit var chatEntity: ChatLogEntity
+    private lateinit var dateBar: ChatLogEntity
+    private var notes = listOf<ChatLogEntity>()
+    var currentDate : String = ""
 
     companion object {
         private const val CAMERA_PERMISSION_CODE = 1
@@ -57,13 +61,23 @@ class CameraFragment : Fragment() {
             .build()
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_camera, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        var i = 0
+        noteDB.dao().getAllNotes().observe(viewLifecycleOwner) { list ->
+            notes = list
+            while (notes.size > i) {
+                if (notes[i].isUser == 2) {
+                    currentDate = notes[i].date
+                }
+                i++
+            }
+        }
         ivImage = view.findViewById(R.id.iv_image)
         tvResult = view.findViewById(R.id.tv_result)
         val btnGallery = view.findViewById<Button>(R.id.btn_gallery)
@@ -145,6 +159,11 @@ class CameraFragment : Fragment() {
             val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
             thumbnail = bitmap
             ivImage.setImageBitmap(thumbnail)
+        }
+        if (currentDate != currentDate()){
+            dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate(), null)
+            noteDB.dao().addNote(dateBar)
+            currentDate = currentDate()
         }
         imageNote = ChatLogEntity(0, "", 3, currentTime(), currentDate(), thumbnail)
         noteDB.dao().addNote(imageNote)
@@ -245,6 +264,8 @@ class CameraFragment : Fragment() {
                     requireActivity().runOnUiThread {
                         stopWaitingDots()
                         typeWriterEffect(botMessage)
+                        chatEntity = ChatLogEntity(0,botMessage,1,currentTime(),currentDate(),null)
+                        noteDB.dao().addNote(chatEntity)
                     }
                 } catch (e: Exception) {
                     requireActivity().runOnUiThread {
