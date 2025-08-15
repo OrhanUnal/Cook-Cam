@@ -27,23 +27,9 @@
             android:id="@+id/calorieText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="48sp"
+            android:textSize="24sp"
             android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:id="@+id/todayCaloriesText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="italic"
-            android:layout_marginBottom="16dp"/>
-
-        <TextView
-            android:id="@+id/selectedDayCaloriesText"
-            android:layout_width="99dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
