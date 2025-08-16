@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/nav_home" android:icon="@drawable/ic_home_48dp_48x48" android:title="Ana Sayfa" />
     <item android:id="@+id/nav_camera" android:icon="@drawable/ic_camera_96dp_96x96" android:title="Kamera" />
-    <item android:id="@+id/nav_calendar" android:icon="@drawable/ic_calendar" android:title="Takvim" />
-    <item android:id="@+id/nav_ai_chat" android:icon="@drawable/ic_chat" android:title="AI Chat" />
-    <item android:id="@+id/nav_saved" android:icon="@drawable/ic_saved" android:title="Kaydedilenler" />
+    <item android:id="@+id/nav_calendar" android:icon="@drawable/ic_calendar_96dp_96x96" android:title="Takvim" />
+    <item android:id="@+id/nav_ai_chat" android:icon="@drawable/ic_chat_96dp_96x96" android:title="AI Chat" />
+    <item android:id="@+id/nav_saved" android:icon="@drawable/ic_save_96dp_96x96" android:title="Kaydedilenler" />
 </menu>
