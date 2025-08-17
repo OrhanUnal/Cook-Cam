@@ -10,7 +10,6 @@
                 android:color="@color/darkGrey"/>
         </shape>
     </item>
-
     <item
         android:drawable="@drawable/baseline_mode_night_24"
         android:gravity="center"/>

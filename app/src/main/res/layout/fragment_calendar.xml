@@ -11,6 +11,7 @@
         android:orientation="vertical"
         android:gravity="top|center_horizontal"
         android:padding="16dp"
+        style="@style/ScreenBackground"
         android:clipToPadding="false"
         android:clipChildren="false">
 
@@ -43,6 +44,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:text="−"
+                style="@style/BackgroundTint"
                 android:textSize="20sp"
                 android:padding="0dp"
                 android:layout_marginEnd="12dp"/>
@@ -61,6 +63,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:text="+"
+                style="@style/BackgroundTint"
                 android:textSize="20sp"
                 android:padding="0dp"
                 android:layout_marginStart="12dp"/>
@@ -71,6 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kaydet"
+            style="@style/BackgroundTint"
             android:layout_marginBottom="16dp"/>
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -80,6 +84,7 @@
             android:layout_gravity="center"
             android:scaleX="0.9"
             android:scaleY="0.9"
+            style="@style/calendarColor"
             app:mcv_showOtherDates="all"/>
     </LinearLayout>
 </ScrollView>

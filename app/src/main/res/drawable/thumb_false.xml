@@ -10,7 +10,6 @@
                 android:color="@color/lavender"/>
         </shape>
     </item>
-
     <item
         android:drawable="@drawable/baseline_mode_light_24"
         android:gravity="center"/>

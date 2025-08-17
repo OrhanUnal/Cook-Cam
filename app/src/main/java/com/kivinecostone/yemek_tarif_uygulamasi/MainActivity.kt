@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             switchMode.isChecked = true
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
-        switchMode.setOnCheckedChangeListener { _, isChecked ->
+        switchMode.setOnCheckedChangeListener { buttonView, isChecked ->
             if (nightMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPreferences.edit {
@@ -57,8 +57,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        replaceFragment(homeFragment)
+        if(savedInstanceState == null)
+            replaceFragment(homeFragment)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 

@@ -1,11 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Yemek_Tarif_Uygulamasi" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="switchStyle">@style/CustomSwitch</item>
     </style>
-    <style name="ScreenBackground"><item name="android:background">@color/black</item></style>
-    <style name="CardBackground"><item name="android:background">@color/darkGrey</item></style>
-    <style name="TextColor"><item name="android:textColor">@color/grey</item></style>
-    <style name="backgroundTint"><item name="android:backgroundTint">@color/grey</item></style>
+
+    <style name="Theme.Yemek_Tarif_Uygulamasi" parent="Base.Theme.Yemek_Tarif_Uygulamasi" />
+
+    <style name="ScreenBackground">
+        <item name="android:background">@color/black</item>
+    </style>
+    <style name="CardBackground">
+        <item name="android:background">@color/darkGrey</item>
+    </style>
+    <style name="TextColor">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:background">@color/black</item>
+    </style>
+    <style name="BackgroundTint">
+        <item name="android:backgroundTint">@color/darkGrey</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="CustomSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="thumbIcon">@drawable/thumb</item>
+        <item name="track">@drawable/track</item>
+    </style>
+    <style name="calendarColor">
+        <item name="mcv_arrowColor">@color/white</item>
+        <item name="mcv_selectionColor">@color/lavender</item>
+    </style>
 </resources>

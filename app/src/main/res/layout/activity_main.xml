@@ -5,14 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.SwitchCompat
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/themeSwitch"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="end"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        app:useMaterialThemeColors="false"
         android:thumb="@drawable/thumb"
-        app:track="@drawable/track"
-        />
+        android:track="@drawable/track" />
+
+
 
     <!-- Fragment alanı -->
     <FrameLayout

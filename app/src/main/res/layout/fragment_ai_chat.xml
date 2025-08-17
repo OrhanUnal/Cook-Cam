@@ -2,7 +2,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    style="@style/ScreenBackground"
     android:background="#FAFAFA">
 
 
@@ -12,6 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="8dp"
+        style="@style/ScreenBackground"
         android:overScrollMode="never" />
 
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:background="#FFFFFF"
+        style="@style/ScreenBackground"
         android:elevation="4dp">
 
 
@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:hint="Mesajınızı yazın..."
             android:padding="12dp"
-            android:background="@drawable/bg_input"
+            style="@style/TextColor"
             android:textSize="16sp"
             android:inputType="textCapSentences|textMultiLine"
             android:imeOptions="actionSend" />
@@ -52,7 +52,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gönder"
-            style="@style/BackgroundTint"
-            android:textColor="@android:color/white" />
+            style="@style/BackgroundTint"/>
     </LinearLayout>
 </LinearLayout>
