@@ -7,6 +7,15 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <TextView
+        android:id="@+id/messageTime"
+        style="@style/TextColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginTop="220dp"
+        android:textSize="10sp" />
+
     <LinearLayout
         android:layout_width="1dp"
         android:layout_height="1dp"
@@ -17,13 +26,6 @@
             android:layout_width="1dp"
             android:layout_height="1dp" />
 
-        <TextView
-            android:id="@+id/messageTime"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:gravity="end"
-            android:textColor="#7A7A7A"
-            android:textSize="1sp" />
     </LinearLayout>
 
     <ImageView
@@ -33,7 +35,6 @@
         android:background="#929292"
         android:contentDescription="CameraImage"
         android:scaleType="centerCrop" />
-
     <ImageView
         android:id="@+id/avatarImage"
         android:layout_width="40dp"
@@ -42,4 +43,6 @@
         android:layout_gravity="bottom"
         android:scaleType="centerCrop"
         android:contentDescription="Kullanıcı avatarı"/>
+
+
 </LinearLayout>

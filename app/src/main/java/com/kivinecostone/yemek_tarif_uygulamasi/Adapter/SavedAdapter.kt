@@ -58,15 +58,16 @@ class SavedAdapter : RecyclerView.Adapter<SavedAdapter.NoteViewHolder>() {
         when (note.isUser) {
             0 -> {
                 holder.avatarImage.setImageResource(R.drawable.ic_user)
-                holder.ivImage.setVisibility(View.GONE)
+                holder.ivImage.visibility = View.GONE
             }
             1 -> {
                 holder.avatarImage.setImageResource(R.drawable.ic_bot_chef)
-                holder.ivImage.setVisibility(View.GONE)
+                holder.ivImage.visibility = View.GONE
             }
             2 -> {
-                holder.avatarImage.isInvisible
-                holder.ivImage.setVisibility(View.GONE)
+                holder.avatarImage.visibility = View.GONE
+                holder.messageTime.visibility = View.GONE
+                holder.ivImage.visibility = View.GONE
             }else -> {
             holder.avatarImage.setImageResource(R.drawable.ic_user)
             holder.ivImage.setImageBitmap(note.image)
