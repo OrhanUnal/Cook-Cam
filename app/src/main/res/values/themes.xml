@@ -26,4 +26,12 @@
         <item name="mcv_arrowColor">@color/black</item>
         <item name="mcv_selectionColor">@color/darkGrey</item>
     </style>
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:weekNumberColor">@color/darkGrey</item>
+        <item name="android:headerYearTextAppearance">@color/darkGrey</item>
+    </style>
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/darkGrey</item>
+    </style>
 </resources>

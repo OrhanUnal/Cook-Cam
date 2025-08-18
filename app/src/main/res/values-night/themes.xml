@@ -17,14 +17,25 @@
     </style>
     <style name="BackgroundTint">
         <item name="android:backgroundTint">@color/darkGrey</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
     <style name="CustomSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="thumbIcon">@drawable/thumb</item>
         <item name="track">@drawable/track</item>
     </style>
     <style name="calendarColor">
-        <item name="mcv_arrowColor">@color/white</item>
+        <item name="mcv_arrowColor">@color/grey</item>
         <item name="mcv_selectionColor">@color/lavender</item>
+    </style>
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:weekNumberColor">@color/grey</item>
+        <item name="android:headerYearTextAppearance">@color/grey</item>
+    </style>
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/grey</item>
+    </style>
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/grey</item>
     </style>
 </resources>
