@@ -27,7 +27,13 @@
         tools:targetApi="31">
 
         <activity
-            android:name="AddNoteActivity"
+            android:name=".RecipeActivity.AddRecipeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecipeActivity.DeleteRecipeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecipeActivity.EditRecipeActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

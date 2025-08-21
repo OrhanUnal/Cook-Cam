@@ -38,4 +38,16 @@
     <style name="CalenderViewCustom" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/grey</item>
     </style>
+    <style name="CustomExpendMore" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_expand_more_white</item>
+    </style>
+    <style name="CustomExpendLess" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_expand_less_white</item>
+    </style>
+    <style name="CustomDelete" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_delete_white</item>
+    </style>
+    <style name="CustomEdit" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_edit_white</item>
+    </style>
 </resources>

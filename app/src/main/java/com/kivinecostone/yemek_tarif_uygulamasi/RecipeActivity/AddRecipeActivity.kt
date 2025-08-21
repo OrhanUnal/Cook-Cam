@@ -1,17 +1,16 @@
-package com.kivinecostone.yemek_tarif_uygulamasi
+package com.kivinecostone.yemek_tarif_uygulamasi.RecipeActivity
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kivinecostone.yemek_tarif_uygulamasi.HomeFragmentDB.RecipeTableEntity
+import com.kivinecostone.yemek_tarif_uygulamasi.R
 import com.kivinecostone.yemek_tarif_uygulamasi.database.NoteData
 
-class AddNoteActivity : AppCompatActivity()
+class AddRecipeActivity : AppCompatActivity()
 {
     private lateinit var recipeTableEntity: RecipeTableEntity
     private lateinit var noteDB: NoteData
@@ -32,8 +31,9 @@ class AddNoteActivity : AppCompatActivity()
         btnSave.setOnClickListener(){
             val title = findViewById<EditText>(R.id.edtTitle)
             val desc = findViewById<EditText>(R.id.edtDesc)
-            if (title.text.isNotEmpty() || desc.text.isNotEmpty()){
-                recipeTableEntity = RecipeTableEntity(0,desc.text.toString(), title.text.toString(),null)
+            if (title.text.isNotEmpty() and desc.text.isNotEmpty()){
+                recipeTableEntity =
+                    RecipeTableEntity(0, desc.text.toString(), title.text.toString(), null)
                 noteDB.recipe().addRecipe(recipeTableEntity)
                 finish()
             }

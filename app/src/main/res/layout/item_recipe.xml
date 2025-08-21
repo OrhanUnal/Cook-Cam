@@ -4,25 +4,50 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tv_recipe_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tarif Başlığı"
-        android:textStyle="bold"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/tv_recipe_self"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tarif Detayı"
-        android:textSize="14sp" />
-
     <ImageView
         android:id="@+id/iv_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Tarif Image" />
 
+    <TextView
+        android:id="@+id/tv_recipe_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:text="Tarif Başlığı"
+        android:textStyle="bold"
+        android:textSize="24dp" />
+
+    <TextView
+        android:id="@+id/tv_recipe_self"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tarif Detayı"
+        android:layout_marginTop="16dp"
+        android:textSize="14sp" />
+
+    <ImageButton
+        android:id="@+id/viewMoreButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        style="@style/CustomExpendMore"/>
+
+    <ImageButton
+        android:id="@+id/showLessButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        style="@style/CustomExpendLess" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        style="@style/CustomDelete"/>
+
+    <ImageButton
+        android:id="@+id/editButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        style="@style/CustomEdit" />
 </LinearLayout>

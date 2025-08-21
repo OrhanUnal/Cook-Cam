@@ -21,4 +21,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM RecipeTableEntity")
     fun getAllRecipes(): LiveData<List<RecipeTableEntity>>
+
+    @Query("SELECT * FROM RecipeTableEntity WHERE id LIKE :id")
+    fun getRecipe(id : Int) : RecipeTableEntity
 }

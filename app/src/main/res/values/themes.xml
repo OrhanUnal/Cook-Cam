@@ -34,4 +34,17 @@
     <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
         <item name="android:textColor">@color/darkGrey</item>
     </style>
+    <style name="CustomExpendMore" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_expand_more_black</item>
+    </style>
+    <style name="CustomExpendLess" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_expand_less_black</item>
+    </style>
+    <style name="CustomDelete" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_delete_black</item>
+    </style>
+    <style name="CustomEdit" parent="Widget.AppCompat.ImageButton">
+        <item name="android:src">@drawable/ic_edit_black</item>
+    </style>
+
 </resources>
