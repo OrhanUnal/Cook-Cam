@@ -20,7 +20,7 @@
             android:text="Tarif Başlığı"
             android:textStyle="bold"
             android:textSize="20sp"
-            style="@style/TextColor"
+            style="@style/TextColorForRecipe"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
             android:text="Tarif Detayı"
             android:textSize="14sp"
             android:layout_marginTop="8dp"
-            style="@style/TextColor"
+            style="@style/TextColorForRecipe"
             app:layout_constraintTop_toBottomOf="@id/iv_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

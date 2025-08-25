@@ -46,10 +46,11 @@ class EditRecipeActivity: AppCompatActivity() {
         val desc = findViewById<EditText>(R.id.edtDesc)
         image = findViewById(R.id.iv_image)
         image.setImageBitmap(noteDB.recipe().getRecipe(recipeId).image)
+        defaultImage = noteDB.recipe().getRecipe(recipeId).image
         title.setText(noteDB.recipe().getRecipe(recipeId).recipeTitle)
         desc.setText(noteDB.recipe().getRecipe(recipeId).recipeSelf)
         val btnSave = findViewById<FloatingActionButton>(R.id.btnSave)
-        btnSave.setOnClickListener() {
+        btnSave.setOnClickListener {
             if (title.text.isNotEmpty() and desc.text.isNotEmpty()) {
                 recipeTableEntity =
                     RecipeTableEntity(recipeId, desc.text.toString(), title.text.toString(), defaultImage)
