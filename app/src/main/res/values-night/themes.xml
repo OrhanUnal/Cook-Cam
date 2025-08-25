@@ -13,6 +13,10 @@
     </style>
     <style name="TextColor">
         <item name="android:textColor">@color/grey</item>
+        <item name="android:background">@color/darkGrey</item>
+    </style>
+    <style name="TextColorForCamera">
+        <item name="android:textColor">@color/grey</item>
         <item name="android:background">@color/black</item>
     </style>
     <style name="BackgroundTint">
@@ -39,15 +43,19 @@
         <item name="android:textColorPrimary">@color/grey</item>
     </style>
     <style name="CustomExpendMore" parent="Widget.AppCompat.ImageButton">
+        <item name="android:backgroundTint">@color/darkGrey</item>
         <item name="android:src">@drawable/ic_expand_more_white</item>
     </style>
     <style name="CustomExpendLess" parent="Widget.AppCompat.ImageButton">
+        <item name="android:backgroundTint">@color/darkGrey</item>
         <item name="android:src">@drawable/ic_expand_less_white</item>
     </style>
     <style name="CustomDelete" parent="Widget.AppCompat.ImageButton">
+        <item name="android:backgroundTint">@color/darkGrey</item>
         <item name="android:src">@drawable/ic_delete_white</item>
     </style>
     <style name="CustomEdit" parent="Widget.AppCompat.ImageButton">
+        <item name="android:backgroundTint">@color/darkGrey</item>
         <item name="android:src">@drawable/ic_edit_white</item>
     </style>
 </resources>

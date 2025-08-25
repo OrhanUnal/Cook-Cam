@@ -44,8 +44,8 @@ class CameraFragment : Fragment() {
     var currentDate : String = ""
 
     companion object {
-        private const val CAMERA_PERMISSION_CODE = 1
-        private const val CAMERA_REQUEST_CODE = 2
+        const val CAMERA_PERMISSION_CODE = 1
+        const val CAMERA_REQUEST_CODE = 2
         private const val GALLERY_PERMISSION_CODE = 3
         private const val  GALLERY_REQUEST_CODE = 4
     }

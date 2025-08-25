@@ -31,6 +31,7 @@ class DeleteRecipeActivity : AppCompatActivity() {
         }
         defaultTitle=noteDB.recipe().getRecipe(recipeId).recipeTitle
         defaultDesc=noteDB.recipe().getRecipe(recipeId).recipeSelf
+        defaultImage = noteDB.recipe().getRecipe(recipeId).image
         recipeEntity = RecipeTableEntity(recipeId,defaultDesc,defaultTitle, defaultImage)
         noteDB.recipe().deleteRecipe(recipeEntity)
         finish()
