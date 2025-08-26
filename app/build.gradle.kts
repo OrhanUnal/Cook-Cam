@@ -21,6 +21,16 @@ if (apiKey.isBlank()) {
     throw GradleException("API_KEY bulunamadı. local.properties / -PAPI_KEY / ENV API_KEY kullan.")
 }
 
+val cameraApiKey: String = (
+        localProps.getProperty("CAMERA_AI_API")
+            ?: (project.findProperty("CAMERA_AI_API") as String?)
+            ?: System.getenv("CAMERA_AI_API")
+            ?: ""
+        )
+if (cameraApiKey.isBlank()) {
+    throw GradleException("API_KEY bulunamadı. local.properties / -PAPI_KEY / ENV API_KEY kullan.")
+}
+
 android {
     namespace = "com.kivinecostone.yemek_tarif_uygulamasi"
     compileSdk = 35
@@ -35,6 +45,7 @@ android {
 
 
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "CAMERA_AI_API", "\"$apiKey\"")
     }
 
 

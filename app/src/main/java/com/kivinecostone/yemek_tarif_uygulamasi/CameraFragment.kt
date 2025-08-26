@@ -34,7 +34,7 @@ import java.util.Locale
 class CameraFragment : Fragment() {
 
     private var typingJob: Job? = null
-    private val CAMERA_AI_API = "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"
+    private val CAMERA_OPEN_AI_API: String = com.kivinecostone.yemek_tarif_uygulamasi.BuildConfig.CAMERA_AI_API
     private lateinit var ivImage: ImageView
     private lateinit var tvResult: TextView
     private lateinit var imageNote: ChatLogEntity
@@ -251,7 +251,7 @@ class CameraFragment : Fragment() {
         val request = Request.Builder()
             .url("https://api.openai.com/v1/chat/completions")
             .post(body.toRequestBody(mediaType))
-            .addHeader("Authorization", "Bearer $CAMERA_AI_API")
+            .addHeader("Authorization", "Bearer $CAMERA_OPEN_AI_API")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
