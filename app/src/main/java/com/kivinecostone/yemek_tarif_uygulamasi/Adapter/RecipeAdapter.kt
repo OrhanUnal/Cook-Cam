@@ -35,8 +35,8 @@ class RecipeAdapter (var mContext: Context?) : RecyclerView.Adapter<RecipeAdapte
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = recipes[position]
-        if (note.recipeSelf.length > 10)
-            holder.textView.text = note.recipeSelf.removeRange(10, note.recipeSelf.length)
+        if (note.recipeSelf.length > 20)
+            holder.textView.text = note.recipeSelf.removeRange(20, note.recipeSelf.length)
         else
             holder.textView.text = note.recipeSelf
         holder.titleView.text = note.recipeTitle
@@ -52,8 +52,8 @@ class RecipeAdapter (var mContext: Context?) : RecyclerView.Adapter<RecipeAdapte
             holder.btnDelete.visibility = View.VISIBLE
         }
         holder.btnShowLess.setOnClickListener {
-            if (note.recipeSelf.length > 10)
-                holder.textView.text = note.recipeSelf.removeRange(10, note.recipeSelf.length)
+            if (note.recipeSelf.length > 20)
+                holder.textView.text = note.recipeSelf.removeRange(20, note.recipeSelf.length)
             holder.btnShowLess.visibility = View.GONE
             holder.btnViewMore.visibility = View.VISIBLE
             holder.btnEdit.visibility = View.GONE

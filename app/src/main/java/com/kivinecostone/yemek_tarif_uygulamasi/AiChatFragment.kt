@@ -187,7 +187,7 @@ class AiChatFragment : Fragment() {
                 "content",
                 "Sen yemek tarifleri, yemek pişirme teknikleri, mutfak kültürü, gıda, beslenme, diyet ve sağlıklı yaşam konularında uzman bir asistansın.\n" +
                         "Eğer kullanıcı mesajı yemek, yiyecek, içecek, mutfak malzemeleri, beslenme, diyet, protein, vitamin veya sağlıklı yaşam ile ilgiliyse net bir şekilde cevap ver.\n" +
-                        "Eğer konu tamamen yemekle ilgisizse kibarca \"Bu konuda yardımcı olamıyorum.\" de.\n"
+                        "Eğer konu tamamen yemekle ilgisizse kibarca \"Bu konuda yardımcı olamıyorum.\" de.\n" + "eger mesaj sadece \"moin\" sozcugunden olusuyorsa sadece bir tavsan emojisi at" //easter egg
             )
         )
         val history =
