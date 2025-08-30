@@ -52,8 +52,12 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_image"
-        android:layout_width="362dp"
-        android:layout_height="390dp"
+        app:layout_constraintHeight_min="0dp"
+        app:layout_constraintWidth_min="0dp"
+        app:layout_constraintHeight_max="600dp"
+        app:layout_constraintWidth_max="600dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#929292"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
