@@ -14,6 +14,7 @@
         android:layout_margin="8dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,10 +38,10 @@
         android:layout_width="392dp"
         android:layout_height="193dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toBottomOf="@+id/nameCard">
+        app:layout_constraintTop_toTopOf="@+id/guideline9">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_image"
@@ -63,7 +64,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edtImage">
+        app:layout_constraintTop_toBottomOf="@+id/edtImage">
 
         <EditText
             android:id="@+id/edtDesc"
@@ -110,21 +111,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.84" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.36" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09" />
+        app:layout_constraintGuide_percent="0.16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
@@ -145,6 +146,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98" />
+        app:layout_constraintGuide_percent="0.92" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

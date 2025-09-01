@@ -162,19 +162,20 @@ class CameraFragment : Fragment() {
             ivImage.setImageBitmap(thumbnail)
             thumbnail = resizeBitmap(bitmap, 800)
         }
-        if (currentDate != currentDate()){
+        if (currentDate != currentDate() && thumbnail != null){
             dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate(), null)
             noteDB.dao().addNote(dateBar)
             currentDate = currentDate()
         }
-        imageNote = ChatLogEntity(0, "", 3, currentTime(), currentDate(), thumbnail)
-        noteDB.dao().addNote(imageNote)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        thumbnail?.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val imageBytes = byteArrayOutputStream.toByteArray()
-        val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
-
-        sendImageToGPT(base64Image)
+        if (thumbnail != null) {
+            imageNote = ChatLogEntity(0, "", 3, currentTime(), currentDate(), thumbnail)
+            noteDB.dao().addNote(imageNote)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            val imageBytes = byteArrayOutputStream.toByteArray()
+            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+            sendImageToGPT(base64Image)
+        }
     }
 
     private fun typeWriterEffect(fullText: String) {
