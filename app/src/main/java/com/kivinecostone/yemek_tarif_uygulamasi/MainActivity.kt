@@ -4,6 +4,9 @@ package com.kivinecostone.yemek_tarif_uygulamasi
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -25,9 +28,24 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val sharedPreferences: SharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE)
+        val privacy: Boolean = sharedPreferences.getBoolean("Privacy", false)
+        if (!privacy)
+            checkPolicy(sharedPreferences, savedInstanceState)
+        else
+            startMain(sharedPreferences, savedInstanceState)
+
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    private fun startMain(sharedPreferences: SharedPreferences, savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
         val switchMode: SwitchCompat = findViewById(R.id.themeSwitch)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE)
         val nightMode: Boolean = sharedPreferences.getBoolean("nightMode", false)
         if(nightMode){
             switchMode.isChecked = true
@@ -70,9 +88,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+    private fun checkPolicy(sharedPreferences: SharedPreferences, saved: Bundle?) {
+        setContentView(R.layout.privacy_policy)
+        val confirmButton = findViewById<Button>(R.id.continueButton)
+        val checkBox = findViewById<CheckBox>(R.id.checkbox)
+        confirmButton.setOnClickListener {
+            if (checkBox.isChecked){
+                sharedPreferences.edit{
+                    putBoolean("Privacy", true)
+                }
+                startMain(sharedPreferences, saved)
+            }
+            else{
+                Toast.makeText(this, "Please read and confirm our policy and check the box.", Toast.LENGTH_SHORT).show()
+                checkPolicy(sharedPreferences, saved)
+            }
+        }
     }
 }
