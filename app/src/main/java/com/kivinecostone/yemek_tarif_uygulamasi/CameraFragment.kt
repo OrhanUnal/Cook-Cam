@@ -236,7 +236,7 @@ class CameraFragment : Fragment() {
       "content": [
         {
           "type": "text", 
-          "text": "Görseli analiz et. Eğer görselde yemek varsa, bu yemeğin yaklaşık kalorisini tahmin et ve ''Tahmini Kalori:'' 'kcal' birimi ile yaz. Eğer görselde yemek yoksa, 'Bu fotoğrafta yemek görünmüyor.' de."
+          "text": "Görseli analiz et. Eğer görselde yemek veya icecek varsa, bu yemeğin veya icecegin yaklaşık kalorisini tahmin et ve ''Tahmini Kalori:'' 'kcal' birimi ile yaz. Mesajı çok uzatma ve sadece yemegin veya içecegin ne olduğunu yazıp yanına yemegin sadece 1 satırlık kısa bir özetini yaz ve altına kalorisini ekle. Eğer görselde yemek veya icecek yoksa, 'Bu fotoğrafta yemek görünmüyor.' de."
         },
         {
           "type": "image_url", 
