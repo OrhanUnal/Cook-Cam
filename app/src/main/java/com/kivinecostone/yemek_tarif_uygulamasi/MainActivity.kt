@@ -4,8 +4,10 @@ package com.kivinecostone.yemek_tarif_uygulamasi
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Html
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -92,6 +94,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.privacy_policy)
         val confirmButton = findViewById<Button>(R.id.continueButton)
         val checkBox = findViewById<CheckBox>(R.id.checkbox)
+        val textView = findViewById<TextView>(R.id.policyText)
+        textView.text = Html.fromHtml(
+            getString(R.string.privacy_policy).replace("\n", "<br>"),
+            Html.FROM_HTML_MODE_LEGACY
+        )
+
         confirmButton.setOnClickListener {
             if (checkBox.isChecked){
                 sharedPreferences.edit{
