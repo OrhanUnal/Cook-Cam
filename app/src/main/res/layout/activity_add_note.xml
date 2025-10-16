@@ -27,7 +27,7 @@
             android:layout_margin="15dp"
             android:background="@android:color/transparent"
             android:hint="Title"
-            android:maxLines="1"
+            android:maxLength="30"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -35,9 +35,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/edtImage"
-        android:layout_width="392dp"
-        android:layout_height="193dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="395dp"
+        android:layout_height="202dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
@@ -75,7 +74,8 @@
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="Description"
-            android:inputType="text"
+            android:inputType="textCapSentences|textMultiLine"
+            android:imeOptions="actionNext"
             android:textSize="16sp" />
 
     </androidx.cardview.widget.CardView>
