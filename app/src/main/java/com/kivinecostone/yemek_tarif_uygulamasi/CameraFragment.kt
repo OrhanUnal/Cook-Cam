@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -61,6 +63,18 @@ class CameraFragment : Fragment() {
             .build()
     }
 
+    private val pickMedia = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            ivImage.setImageURI(uri)
+            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, uri)
+            val resized = resizeBitmap(bitmap, 800)
+            addToDataBaseAndGPT(resized)
+        } else {
+            tvResult.text = "Resim seçilmedi."
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_camera, container, false)
@@ -99,26 +113,8 @@ class CameraFragment : Fragment() {
         }
 
         btnGallery.setOnClickListener {
-            val galleryPermission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                Manifest.permission.READ_MEDIA_IMAGES
-            } else {
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            }
-
-            if (ContextCompat.checkSelfPermission(requireContext(), galleryPermission)
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(intent, GALLERY_REQUEST_CODE)
-            } else {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(galleryPermission),
-                    GALLERY_PERMISSION_CODE
-                )
-            }
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -153,25 +149,22 @@ class CameraFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
             thumbnail = data!!.extras!!.get("data") as Bitmap
             ivImage.setImageBitmap(thumbnail)
-            thumbnail = resizeBitmap(thumbnail, 800)
-
-        } else if (resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE && data != null) {
-            val imageUri = data.data
-            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
-            thumbnail = bitmap
-            ivImage.setImageBitmap(thumbnail)
-            thumbnail = resizeBitmap(bitmap, 800)
+            val resized = resizeBitmap(thumbnail, 800)
+            addToDataBaseAndGPT(resized)
         }
-        if (currentDate != currentDate() && thumbnail != null){
+    }
+
+    fun addToDataBaseAndGPT(thumbNailImage : Bitmap?){
+        if (currentDate != currentDate() && thumbNailImage != null){
             dateBar = ChatLogEntity(0,currentDate(),2,currentTime(),currentDate(), null)
             noteDB.dao().addNote(dateBar)
             currentDate = currentDate()
         }
-        if (thumbnail != null) {
-            imageNote = ChatLogEntity(0, "", 3, currentTime(), currentDate(), thumbnail)
+        if (thumbNailImage != null) {
+            imageNote = ChatLogEntity(0, "", 3, currentTime(), currentDate(), thumbNailImage)
             noteDB.dao().addNote(imageNote)
             val byteArrayOutputStream = ByteArrayOutputStream()
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            thumbNailImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
             val imageBytes = byteArrayOutputStream.toByteArray()
             val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
             sendImageToGPT(base64Image)

@@ -33,14 +33,14 @@ if (cameraApiKey.isBlank()) {
 
 android {
     namespace = "com.kivinecostone.yemek_tarif_uygulamasi"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.kivinecostone.yemek_tarif_uygulamasi"
         minSdk = 24
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.2.1"
+        versionCode = 6
+        versionName = "1.2.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
 

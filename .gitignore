@@ -14,3 +14,5 @@
 .cxx
 local.properties
 *.keystore
+app/release/app-release.aab
+CookCamKeystore
