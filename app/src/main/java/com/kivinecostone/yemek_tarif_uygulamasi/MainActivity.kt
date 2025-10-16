@@ -3,6 +3,7 @@ package com.kivinecostone.yemek_tarif_uygulamasi
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Html
 import android.widget.Button
@@ -30,13 +31,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val sharedPreferences: SharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE)
         val privacy: Boolean = sharedPreferences.getBoolean("Privacy", false)
-        if (!privacy)
+        if (!privacy) {
             checkPolicy(sharedPreferences, savedInstanceState)
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                sharedPreferences.edit {
+                    putBoolean("nightMode", true)
+                }
+            }
+        }
         else
             startMain(sharedPreferences, savedInstanceState)
-
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -73,11 +80,11 @@ class MainActivity : AppCompatActivity() {
 
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.nav_home -> replaceFragment(homeFragment)
+                R.id.nav_ai_chat -> replaceFragment(aiChatFragment)
                 R.id.nav_camera -> replaceFragment(cameraFragment)
+                R.id.nav_home -> replaceFragment(homeFragment)
                 R.id.nav_calendar -> replaceFragment(calendarFragment)
                 R.id.nav_saved -> replaceFragment(savedFragment)
-                R.id.nav_ai_chat -> replaceFragment(aiChatFragment)
             }
             true
         }
