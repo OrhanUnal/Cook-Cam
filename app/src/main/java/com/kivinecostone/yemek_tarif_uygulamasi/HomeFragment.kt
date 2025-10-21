@@ -18,10 +18,8 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecipeAdapter
     private lateinit var noteDB: NoteData
-
     private lateinit var emptyState: View
     private lateinit var btnAddRecipe: AppCompatImageButton
-    private lateinit var btnGoAdd: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -36,7 +34,6 @@ class HomeFragment : Fragment() {
 
         emptyState = view.findViewById(R.id.emptyState)
         btnAddRecipe = view.findViewById(R.id.btn_addRecipe)
-        btnGoAdd = view.findViewById(R.id.btnGoAdd)
 
         noteDB = Room.databaseBuilder(
             requireContext(),
@@ -52,7 +49,7 @@ class HomeFragment : Fragment() {
             toggleEmptyState(recipes.isEmpty())
         }
 
-        btnGoAdd.setOnClickListener {
+        btnAddRecipe.setOnClickListener {
             startActivity(Intent(requireContext(), AddRecipeActivity::class.java))
         }
 
@@ -62,12 +59,5 @@ class HomeFragment : Fragment() {
     private fun toggleEmptyState(isEmpty: Boolean) {
         emptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
         recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        btnAddRecipe.setOnClickListener {
-            startActivity(Intent(requireContext(), AddRecipeActivity::class.java))
-        }
     }
 }
