@@ -19,6 +19,10 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: RecipeAdapter
     private lateinit var noteDB: NoteData
 
+    private lateinit var emptyState: View
+    private lateinit var btnAddRecipe: AppCompatImageButton
+    private lateinit var btnGoAdd: View
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -26,8 +30,13 @@ class HomeFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.homeRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.setHasFixedSize(true)
         adapter = RecipeAdapter(context)
         recyclerView.adapter = adapter
+
+        emptyState = view.findViewById(R.id.emptyState)
+        btnAddRecipe = view.findViewById(R.id.btn_addRecipe)
+        btnGoAdd = view.findViewById(R.id.btnGoAdd)
 
         noteDB = Room.databaseBuilder(
             requireContext(),
@@ -37,24 +46,28 @@ class HomeFragment : Fragment() {
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
-        noteDB.recipe().getAllRecipes().observe(viewLifecycleOwner){recipes ->
+
+        noteDB.recipe().getAllRecipes().observe(viewLifecycleOwner) { recipes ->
             adapter.setData(recipes)
+            toggleEmptyState(recipes.isEmpty())
         }
+
+        btnGoAdd.setOnClickListener {
+            startActivity(Intent(requireContext(), AddRecipeActivity::class.java))
+        }
+
         return view
+    }
+
+    private fun toggleEmptyState(isEmpty: Boolean) {
+        emptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val btn_addRecipe: AppCompatImageButton = view.findViewById(R.id.btn_addRecipe)
-        btn_addRecipe.setOnClickListener{
+        btnAddRecipe.setOnClickListener {
             startActivity(Intent(requireContext(), AddRecipeActivity::class.java))
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        noteDB.recipe().getAllRecipes().observe(viewLifecycleOwner){recipes ->
-            adapter.setData(recipes)
         }
     }
 }
