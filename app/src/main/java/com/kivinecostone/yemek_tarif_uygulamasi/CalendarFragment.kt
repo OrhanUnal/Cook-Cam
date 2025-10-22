@@ -105,13 +105,9 @@ class CalendarFragment : Fragment() {
             val input = inputAmount.text.toString()
             if (input.isNotEmpty()) {
                 val amount = input.toInt()
-                if(amount or calorieCount > 50000)
-                    Toast.makeText(requireContext(), "Gerçek kaloriyi girin. Kalori 50000den büyük olamaz.", Toast.LENGTH_SHORT).show()
-                else {
-                    calorieCount += amount
-                    if (calorieCount < 0) calorieCount = 0
-                    calorieText.text = "Seçilen Günün Kalorisi: $calorieCount"
-                }
+                calorieCount += amount
+                if (calorieCount < 0) calorieCount = 0
+                calorieText.text = "Seçilen Günün Kalorisi: $calorieCount"
             } else {
                 Toast.makeText(requireContext(), "Lütfen bir sayı gir", Toast.LENGTH_SHORT).show()
             }
