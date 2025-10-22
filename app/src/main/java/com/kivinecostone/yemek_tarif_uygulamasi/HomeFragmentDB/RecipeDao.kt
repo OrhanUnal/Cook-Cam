@@ -24,4 +24,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM RecipeTableEntity WHERE id LIKE :id")
     fun getRecipe(id : Int) : RecipeTableEntity
+
+    @Query("SELECT COUNT(*) FROM RecipeTableEntity")
+    fun getSavedRecipeCount() : Int
 }

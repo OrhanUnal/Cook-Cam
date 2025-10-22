@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         if(savedInstanceState == null)
-            replaceFragment(homeFragment)
+            replaceFragment(aiChatFragment)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
