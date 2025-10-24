@@ -27,9 +27,11 @@
         <item name="thumbIcon">@drawable/thumb</item>
         <item name="track">@drawable/track</item>
     </style>
+    <style name="emptyBookIcon">
+        <item name="android:src">@drawable/ic_asci_kitabi_dark</item>
+    </style>
     <style name="calendarColor">
         <item name="mcv_arrowColor">@color/grey</item>
-        <item name="mcv_selectionColor">@color/black</item>
     </style>
     <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
         <item name="android:textColor">@color/grey</item>

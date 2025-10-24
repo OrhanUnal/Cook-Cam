@@ -85,10 +85,12 @@
             android:layout_gravity="center"
             android:scaleX="0.9"
             android:scaleY="0.9"
+            app:mcv_selectionColor="@color/darkBlue"
             app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
             app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
-            style="@style/calendarColor"
             android:theme="@style/CalenderViewCustom"
-            app:mcv_showOtherDates="all"/>
+            app:mcv_showOtherDates="all"
+            style="@style/calendarColor"
+            />
     </LinearLayout>
 </ScrollView>
