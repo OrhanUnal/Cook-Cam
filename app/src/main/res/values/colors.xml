@@ -6,4 +6,5 @@
     <color name="darkGrey">#FF424242</color>
     <color name="lavender">#8692f7</color>
     <color name="darkBlue">#203281</color>
+    <color name="popupBackground">#F2F2F2</color>
 </resources>

@@ -19,6 +19,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.core.content.edit
+import android.widget.ImageButton
+import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,9 +58,53 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    private fun showThemePopup(anchorView: View, sharedPreferences: SharedPreferences) {
+        val popupView = layoutInflater.inflate(R.layout.popup_layout, null)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        val switchPopup = popupView.findViewById<SwitchCompat>(R.id.themeSwitchPopup)
+        val isNight = sharedPreferences.getBoolean("nightMode", false)
+        switchPopup.isChecked = isNight
+
+        switchPopup.setOnCheckedChangeListener { _, isChecked ->
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            )
+            sharedPreferences.edit { putBoolean("nightMode", isChecked) }
+            popupWindow.dismiss()
+            recreate()
+        }
+
+        popupWindow.elevation = 10f
+        popupWindow.showAsDropDown(anchorView)
+    }
+
+
+
     private fun startMain(sharedPreferences: SharedPreferences, savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
         val switchMode: SwitchCompat = findViewById(R.id.themeSwitch)
+        val btnMenu = findViewById<ImageButton>(R.id.btnMenu)
+        btnMenu.setOnClickListener { v ->
+            showThemePopup(v, sharedPreferences)
+        }
+
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                btnMenu.setImageResource(R.drawable.dark_mode_menu_buton_2)
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                btnMenu.setImageResource(R.drawable.popup_icon_48x48)
+            }
+        }
+
         val nightMode: Boolean = sharedPreferences.getBoolean("nightMode", false)
         if(nightMode){
             switchMode.isChecked = true
